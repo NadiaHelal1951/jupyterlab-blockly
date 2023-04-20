@@ -7,7 +7,7 @@ export const TOOLBOX = {
     {
       kind: 'category',
       name: 'Logic',
-      colour: '210',
+      colour: '120',
       contents: [
         {
           kind: 'block',
