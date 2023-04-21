@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["dom", "es2018"],
     "allowSyntheticDefaultImports": true,
     "composite": true,
     "declaration": true,
