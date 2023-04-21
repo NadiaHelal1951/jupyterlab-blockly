@@ -1,20 +1,10 @@
 import * as Blockly from 'blockly';
+//import { toolbox } from 'blockly/core/utils';
 //toolbox api: { kind: string; contents: [...] } toolbox.d.ts
 // Creating a toolbox containing all the main (default) blocks.
-//import { toolbox } from 'C:\Users\nadia\OneDrive\Documents\GitHub\jupyterlab-blockly\packages\blockly\src\test.js';
+import x from './test';
 
-let toolbox;
-
-fetch('test.js')
-  .then(response => response.json())
-  .then(data => {
-    // Assign the parsed JSON data to the "toolbox" variable
-    toolbox = data;
-    console.log(toolbox);
-  })
-  .catch(error => console.error(error));
-
-export const TOOLBOX = toolbox;
+export const TOOLBOX = x;
 
 // Defining a Blockly Theme in accordance with the current JupyterLab Theme.
 const jupyterlab_theme = Blockly.Theme.defineTheme('jupyterlab', {
