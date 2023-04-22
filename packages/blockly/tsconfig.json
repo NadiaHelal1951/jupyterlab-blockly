@@ -1,10 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "es2017",
     "allowJs": true,
     "outDir": "lib",
     "rootDir": "src"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/test.js"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/test.ts"],
   "exclude": ["node_modules"]
 }

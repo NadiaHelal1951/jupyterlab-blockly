@@ -13,6 +13,7 @@ import { ILauncher } from '@jupyterlab/launcher';
 import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { IKernelMenu, IMainMenu } from '@jupyterlab/mainmenu';
+//import { createJsonInputBox } from './toolboxGenerator';
 
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
@@ -37,6 +38,19 @@ const PALETTE_CATEGORY = 'Blockly editor';
 namespace CommandIDs {
   export const createNew = 'blockly:create-new-blockly-file';
 }
+
+/**const container = document.createElement('div');
+
+// create the JSON input box element
+const jsonInput = document.createElement('textarea');
+jsonInput.placeholder = 'Enter JSON data here';
+
+// add the JSON input box to the container
+container.appendChild(jsonInput);
+
+// add the container to the page
+document.body.appendChild(container);**/
+// create the container element
 
 /**
  * The id of the translation plugin.
@@ -73,7 +87,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     widgetRegistry: IJupyterWidgetRegistry | null
   ): IBlocklyRegistry => {
     console.log('JupyterLab extension jupyterlab-blocky is activated!');
-
+    //createJsonInputBox();
     // Namespace for the tracker
     const namespace = 'jupyterlab-blocky';
 
