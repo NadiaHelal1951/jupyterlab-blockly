@@ -3,13 +3,12 @@ import * as Blockly from 'blockly';
 import { pythonGenerator } from 'blockly/python';
 import { javascriptGenerator } from 'blockly/javascript';
 import { luaGenerator } from 'blockly/lua';
-
 import En from 'blockly/msg/en';
 
 import { IBlocklyRegistry } from './token';
-import { TOOLBOX } from './utils';
 import type { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 import { BlockDefinition } from 'blockly/core/blocks';
+//import { test } from './utils';
 
 /**
  * BlocklyRegistry is the class that JupyterLab-Blockly exposes
@@ -26,17 +25,41 @@ export class BlocklyRegistry implements IBlocklyRegistry {
    */
   constructor() {
     this._toolboxes = new Map<string, ToolboxDefinition>();
-    this._toolboxes.set('default', TOOLBOX);
-
     this._generators = new Map<string, Blockly.Generator>();
+
+    //this.init().then(toolbox => {
+    this._toolboxes.set('default', {
+      kind: 'categoryToolbox',
+      contents: [
+        {
+          kind: 'CATEGORY',
+          colour: '330',
+          custom: 'VARIABLE',
+          name: 'Variables'
+        }
+      ]
+    });
+    //see(toolbox);
+    //});
+    //    { kind: 'categoryToolbox', contents: [{kind: 'CATEGORY', colour: '290', custom: 'PROCEDURE', name: 'Seethiss'}]}
+    //this._toolboxes.set('custom', { kind: 'categoryToolbox', contents: [{ kind: 'CATEGORY', colour: '330', custom: 'VARIABLE', name: 'Testttt' }]});
+    //this.init();
     this._generators.set('python', pythonGenerator);
     this._generators.set('javascript', javascriptGenerator);
     this._generators.set('lua', luaGenerator);
   }
 
+  /**async init(): Promise<ToolboxDefinition> {
+    const toolbox: ToolboxDefinition = await test();
+    this._toolboxes.set('custom', toolbox);
+    //see(toolbox);
+    return toolbox;
+  }**/
+
   /**
    * Returns a map with all the toolboxes.
    */
+
   get toolboxes(): Map<string, ToolboxDefinition> {
     return this._toolboxes;
   }
@@ -88,6 +111,52 @@ export class BlocklyRegistry implements IBlocklyRegistry {
   setlanguage(language: string): void {
     Private.importLanguageModule(language);
   }
+}
+
+export function see(toolboxValue: any) {
+  const dialog2 = document.createElement('dialog');
+  dialog2.style.backgroundColor = 'white';
+  dialog2.style.borderRadius = '10px';
+  dialog2.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.3)';
+  dialog2.style.position = 'fixed';
+  dialog2.style.top = '50%';
+  dialog2.style.left = '50%';
+  dialog2.style.transform = 'translate(-50%, -50%)';
+  dialog2.style.padding = '20px';
+  dialog2.style.zIndex = '9999';
+
+  const title2 = document.createElement('h1');
+  title2.textContent = 'Test the tools';
+  title2.style.fontSize = '20px';
+  title2.style.marginBottom = '10px';
+  title2.style.textAlign = 'center';
+  dialog2.appendChild(title2);
+
+  const toolboxDiv = document.createElement('div');
+  toolboxDiv.textContent = 'say sm' + (toolboxValue as ToolboxDefinition);
+  toolboxDiv.style.marginBottom = '10px';
+  dialog2.appendChild(toolboxDiv);
+
+  const saveButton = document.createElement('button');
+  saveButton.textContent = 'Test';
+  saveButton.style.backgroundColor = '#4CAF50';
+  saveButton.style.borderRadius = '5px';
+  saveButton.style.border = 'none';
+  saveButton.style.color = 'white';
+  saveButton.style.padding = '10px';
+  saveButton.style.cursor = 'pointer';
+  saveButton.style.marginTop = '10px';
+
+  // add the "Save" button to the dialog
+  dialog2.appendChild(saveButton);
+
+  document.body.appendChild(dialog2);
+  saveButton.addEventListener('click', () => {
+    //x = null
+    dialog2.close();
+    //resolve(x)
+  });
+  dialog2.showModal();
 }
 
 namespace Private {

@@ -6,6 +6,6 @@
     "outDir": "lib",
     "rootDir": "src"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/test.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/load.ts"],
   "exclude": ["node_modules"]
 }

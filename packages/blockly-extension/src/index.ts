@@ -56,7 +56,6 @@ document.body.appendChild(container);**/
  * The id of the translation plugin.
  */
 const PLUGIN_ID = '@jupyterlab/translation-extension:plugin';
-
 /**
  * Initialization data for the jupyterlab-blocky extension.
  */
