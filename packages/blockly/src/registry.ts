@@ -8,7 +8,7 @@ import En from 'blockly/msg/en';
 import { IBlocklyRegistry } from './token';
 import type { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 import { BlockDefinition } from 'blockly/core/blocks';
-//import { test } from './utils';
+import { test } from './utils';
 
 /**
  * BlocklyRegistry is the class that JupyterLab-Blockly exposes
@@ -17,44 +17,28 @@ import { BlockDefinition } from 'blockly/core/blocks';
  * Blockly editor.
  */
 export class BlocklyRegistry implements IBlocklyRegistry {
-  private _toolboxes: Map<string, ToolboxDefinition>;
-  private _generators: Map<string, Blockly.Generator>;
+  private _generators = new Map<string, Blockly.Generator>();
+  private _toolboxes = new Map<string, ToolboxDefinition>();
 
-  /**
-   * Constructor of BlocklyRegistry.
-   */
-  constructor() {
-    this._toolboxes = new Map<string, ToolboxDefinition>();
-    this._generators = new Map<string, Blockly.Generator>();
+  private async initialize(): Promise<ToolboxDefinition> {
+    const defaultToolbox = await test;
 
-    //this.init().then(toolbox => {
-    this._toolboxes.set('default', {
-      kind: 'categoryToolbox',
-      contents: [
-        {
-          kind: 'CATEGORY',
-          colour: '330',
-          custom: 'VARIABLE',
-          name: 'Variables'
-        }
-      ]
-    });
-    //see(toolbox);
-    //});
-    //    { kind: 'categoryToolbox', contents: [{kind: 'CATEGORY', colour: '290', custom: 'PROCEDURE', name: 'Seethiss'}]}
-    //this._toolboxes.set('custom', { kind: 'categoryToolbox', contents: [{ kind: 'CATEGORY', colour: '330', custom: 'VARIABLE', name: 'Testttt' }]});
-    //this.init();
-    this._generators.set('python', pythonGenerator);
-    this._generators.set('javascript', javascriptGenerator);
-    this._generators.set('lua', luaGenerator);
+    //see(defaultToolbox);
+    return defaultToolbox;
   }
 
-  /**async init(): Promise<ToolboxDefinition> {
-    const toolbox: ToolboxDefinition = await test();
-    this._toolboxes.set('custom', toolbox);
-    //see(toolbox);
-    return toolbox;
-  }**/
+  constructor() {
+    this.initialize().then((defaultToolbox: ToolboxDefinition) => {
+      this._toolboxes.set('default', defaultToolbox);
+
+      this._generators.set('python', pythonGenerator);
+      this._generators.set('javascript', javascriptGenerator);
+      this._generators.set('lua', luaGenerator);
+
+      //see(defaultToolbox);
+      //see(this._toolboxes.get('default'));
+    });
+  }
 
   /**
    * Returns a map with all the toolboxes.

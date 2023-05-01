@@ -1,79 +1,62 @@
 import * as Blockly from 'blockly';
-//import {openDialogAndGetToolbox} from './load'
 import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
+import { see } from './registry';
 
-let userInput: any;
+export const test = new Promise<ToolboxDefinition>(resolve => {
+  let userInput: ToolboxDefinition | null = null;
+  const dialog = document.createElement('dialog');
+  dialog.style.backgroundColor = 'white';
+  dialog.style.borderRadius = '10px';
+  dialog.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.3)';
+  dialog.style.position = 'fixed';
+  dialog.style.top = '50%';
+  dialog.style.left = '50%';
+  dialog.style.transform = 'translate(-50%, -50%)';
+  dialog.style.padding = '20px';
+  dialog.style.zIndex = '9999';
 
-/**function saveInput() {
-  const inputElement = document.getElementById("userInput") as HTMLInputElement;
-  userInput = inputElement.value;
-  console.log("User Input:", userInput);
-}**/
+  const title = document.createElement('h1');
+  title.textContent = 'Test the tools';
+  title.style.fontSize = '20px';
+  title.style.marginBottom = '10px';
+  title.style.textAlign = 'center';
+  dialog.appendChild(title);
 
-export function test(): Promise<ToolboxDefinition> {
-  return new Promise(resolve => {
-    const dialog2 = document.createElement('dialog');
-    dialog2.style.backgroundColor = 'white';
-    dialog2.style.borderRadius = '10px';
-    dialog2.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.3)';
-    dialog2.style.position = 'fixed';
-    dialog2.style.top = '50%';
-    dialog2.style.left = '50%';
-    dialog2.style.transform = 'translate(-50%, -50%)';
-    dialog2.style.padding = '20px';
-    dialog2.style.zIndex = '9999';
+  const jsonInput = document.createElement('textarea');
+  //jsonInput.placeholder =
+  //'Please make sure it follows toolbox API\nE.g.{"kind"{..}"contents"[{..}]};';
+  jsonInput.style.width = '95%';
+  jsonInput.style.height = '100px';
+  jsonInput.style.borderRadius = '10px';
+  //jsonInput.style.border = '1px solid #ccc';
+  jsonInput.style.backgroundColor = 'white';
+  jsonInput.style.padding = '10px';
+  dialog.appendChild(jsonInput);
 
-    const title2 = document.createElement('h1');
-    title2.textContent = 'Test the tools';
-    title2.style.fontSize = '20px';
-    title2.style.marginBottom = '10px';
-    title2.style.textAlign = 'center';
-    dialog2.appendChild(title2);
+  const saveButton = document.createElement('button');
+  saveButton.textContent = 'Save';
+  saveButton.style.backgroundColor = '#4CAF50';
+  saveButton.style.borderRadius = '5px';
+  saveButton.style.border = 'none';
+  saveButton.style.color = 'white';
+  saveButton.style.padding = '10px';
+  saveButton.style.cursor = 'pointer';
+  saveButton.style.marginTop = '10px';
 
-    const userInputDiv = document.createElement('div');
-    const userInputLabel = document.createElement('label');
-    userInputLabel.textContent = 'Enter your input: ';
-    const userInputInput = document.createElement('input');
-    userInputInput.type = 'text';
-    userInputInput.id = 'userInput';
-    userInputInput.name = 'userInput';
-    userInputDiv.appendChild(userInputLabel);
-    userInputDiv.appendChild(userInputInput);
-    userInputDiv.style.marginBottom = '10px';
-    dialog2.appendChild(userInputDiv);
+  dialog.appendChild(saveButton);
 
-    const saveButton = document.createElement('button');
-    saveButton.textContent = 'Save';
-    saveButton.style.backgroundColor = '#4CAF50';
-    saveButton.style.borderRadius = '5px';
-    saveButton.style.border = 'none';
-    saveButton.style.color = 'white';
-    saveButton.style.padding = '10px';
-    saveButton.style.cursor = 'pointer';
-    saveButton.style.marginTop = '10px';
+  saveButton.addEventListener('click', () => {
+    const inputString = jsonInput.value;
+    userInput = eval(`(${inputString})`);
+    see(userInput);
 
-    // add the "Save" button to the dialog
-    dialog2.appendChild(saveButton);
-
-    saveButton.addEventListener('click', async () => {
-      await (userInput = (
-        document.getElementById('userInput') as HTMLInputElement
-      ).value);
-      dialog2.close();
-      const userInputHeader = document.createElement('h1');
-      userInputHeader.textContent = `Your input was: ${userInput}`;
-      document.body.appendChild(userInputHeader);
-      //let x = { kind: 'categoryToolbox', contents: [{ kind: 'CATEGORY', colour: '330', custom: 'VARIABLE', name: 'Variables' }]};
-      resolve(userInput as ToolboxDefinition);
-    });
-    document.body.appendChild(dialog2);
-    dialog2.showModal();
+    dialog.close();
+    resolve(userInput);
   });
-}
-export { userInput };
-//test();
-//export const TOOLBOX = JSON.stringify(TOOL);
-//export{TOOLBOX}
+
+  document.body.appendChild(dialog);
+  dialog.showModal();
+});
 
 // Defining a Blockly Theme in accordance with the current JupyterLab Theme.
 const jupyterlab_theme = Blockly.Theme.defineTheme('jupyterlab', {
