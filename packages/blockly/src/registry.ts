@@ -40,6 +40,41 @@ export class BlocklyRegistry implements IBlocklyRegistry {
     });
   }
 
+  /**export class BlocklyRegistry implements IBlocklyRegistry {
+  private _generators = new Map<string, Blockly.Generator>();
+  private _toolboxes = new Map<string, ToolboxDefinition>();
+
+  private async initialize(): Promise<ToolboxDefinition> {
+    const defaultToolbox = await test;
+
+    //see(defaultToolbox);
+    return defaultToolbox;
+  }
+
+  private async runInitialization(): Promise<void> {
+    const defaultToolbox = await this.initialize();
+
+    if (defaultToolbox != null) {
+      this._toolboxes.set('default', defaultToolbox);
+    }
+
+    this._generators.set('python', pythonGenerator);
+    this._generators.set('javascript', javascriptGenerator);
+    this._generators.set('lua', luaGenerator);
+  }
+
+  constructor() {
+    // initialize the generators map
+    this._generators.set('python', pythonGenerator);
+    this._generators.set('javascript', javascriptGenerator);
+    this._generators.set('lua', luaGenerator);
+
+    // wait for user input and then run initialization
+    getUserInput().then(() => {
+      this.runInitialization();
+    });
+  } */
+
   /**
    * Returns a map with all the toolboxes.
    */
