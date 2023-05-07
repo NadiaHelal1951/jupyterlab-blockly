@@ -39,19 +39,6 @@ namespace CommandIDs {
   export const createNew = 'blockly:create-new-blockly-file';
 }
 
-/**const container = document.createElement('div');
-
-// create the JSON input box element
-const jsonInput = document.createElement('textarea');
-jsonInput.placeholder = 'Enter JSON data here';
-
-// add the JSON input box to the container
-container.appendChild(jsonInput);
-
-// add the container to the page
-document.body.appendChild(container);**/
-// create the container element
-
 /**
  * The id of the translation plugin.
  */
@@ -86,7 +73,6 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     widgetRegistry: IJupyterWidgetRegistry | null
   ): IBlocklyRegistry => {
     console.log('JupyterLab extension jupyterlab-blocky is activated!');
-    //createJsonInputBox();
     // Namespace for the tracker
     const namespace = 'jupyterlab-blocky';
 

@@ -9,7 +9,6 @@ import * as Blockly from 'blockly';
 
 import { BlocklyRegistry } from './registry';
 import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
-//import { string } from 'blockly/core/utils';
 
 /**
  * BlocklyManager the manager for each document
@@ -38,7 +37,6 @@ export class BlocklyManager {
     this._mimetypeService = mimetypeService;
 
     this._toolbox = 'default';
-    //this._toolbox = 'custom';
 
     this._generator = this._registry.generators.get('python');
 

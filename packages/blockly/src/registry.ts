@@ -8,7 +8,8 @@ import En from 'blockly/msg/en';
 import { IBlocklyRegistry } from './token';
 import type { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 import { BlockDefinition } from 'blockly/core/blocks';
-import { test } from './utils';
+//import { test } from './utils';
+import { defaultToolbox } from './utils';
 
 /**
  * BlocklyRegistry is the class that JupyterLab-Blockly exposes
@@ -17,27 +18,20 @@ import { test } from './utils';
  * Blockly editor.
  */
 export class BlocklyRegistry implements IBlocklyRegistry {
-  private _generators = new Map<string, Blockly.Generator>();
-  private _toolboxes = new Map<string, ToolboxDefinition>();
+  private _toolboxes: Map<string, ToolboxDefinition>;
+  private _generators: Map<string, Blockly.Generator>;
 
-  private async initialize(): Promise<ToolboxDefinition> {
-    const defaultToolbox = await test;
-
-    //see(defaultToolbox);
-    return defaultToolbox;
-  }
-
+  /**
+   * Constructor of BlocklyRegistry.
+   */
   constructor() {
-    this.initialize().then((defaultToolbox: ToolboxDefinition) => {
-      this._toolboxes.set('default', defaultToolbox);
+    this._toolboxes = new Map<string, ToolboxDefinition>();
+    this._toolboxes.set('default', defaultToolbox);
 
-      this._generators.set('python', pythonGenerator);
-      this._generators.set('javascript', javascriptGenerator);
-      this._generators.set('lua', luaGenerator);
-
-      //see(defaultToolbox);
-      //see(this._toolboxes.get('default'));
-    });
+    this._generators = new Map<string, Blockly.Generator>();
+    this._generators.set('python', pythonGenerator);
+    this._generators.set('javascript', javascriptGenerator);
+    this._generators.set('lua', luaGenerator);
   }
 
   /**export class BlocklyRegistry implements IBlocklyRegistry {
