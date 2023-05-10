@@ -13,7 +13,7 @@ import { ILauncher } from '@jupyterlab/launcher';
 import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { IKernelMenu, IMainMenu } from '@jupyterlab/mainmenu';
-//import { createJsonInputBox } from './toolboxGenerator';
+import { INotebookTracker } from '@jupyterlab/notebook';
 
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
@@ -50,6 +50,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
   id: 'jupyterlab-blocky:plugin',
   autoStart: true,
   requires: [
+    INotebookTracker,
     ILayoutRestorer,
     IRenderMimeRegistry,
     IEditorServices,
@@ -61,6 +62,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
   provides: IBlocklyRegistry,
   activate: (
     app: JupyterFrontEnd,
+    notebookTracker: INotebookTracker,
     restorer: ILayoutRestorer,
     rendermime: IRenderMimeRegistry,
     editorServices: IEditorServices,
@@ -78,7 +80,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
 
     // Creating the tracker for the document
     const tracker = new WidgetTracker<BlocklyEditor>({ namespace });
-
+    tracenotebook(notebookTracker);
     // Handle state restoration.
     if (restorer) {
       // When restoring the app, if the document was open, reopen it
@@ -269,6 +271,33 @@ function* widgetRenderers(cells: CodeCell[]): IterableIterator<WidgetRenderer> {
       yield w;
     }
   }
+}
+
+function tracenotebook(notebookTracker: INotebookTracker) {
+  // Get the currently active notebook panel
+  const notePanel = notebookTracker.currentWidget;
+
+  // Get the currently active code cell
+  const activeCell = notePanel?.content.activeCell as CodeCell;
+
+  // Set the code in the active cell
+  if (activeCell) {
+    activeCell.model.value.text = "print('Hello, world!')";
+  } else {
+    console.log('No active cell found');
+  }
+
+  // Listen for changes to the active cell
+  notebookTracker.activeCellChanged.connect((tracker, cell) => {
+    console.log('Active cell changed:', cell);
+
+    if (cell instanceof CodeCell) {
+      // Set the code in the new active cell
+      cell.model.value.text = "print('Hello, world!')";
+    } else {
+      console.log('No active cell found');
+    }
+  });
 }
 
 export default plugin;
