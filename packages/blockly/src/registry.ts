@@ -20,35 +20,12 @@ export class BlocklyRegistry implements IBlocklyRegistry {
   private _generators = new Map<string, Blockly.Generator>();
   private _toolboxes = new Map<string, ToolboxDefinition>();
 
-  private async initialize(): Promise<void> {
-    await this.setDefaultToolbox;
-
-    //see(defaultToolbox);
-    //return defaultToolbox;
-  }
-
   constructor() {
-    this.initialize().then(() => {
-      this._toolboxes.set('default', defaultToolbox);
+    this._toolboxes.set('default', defaultToolbox);
 
-      this._generators.set('python', pythonGenerator);
-      this._generators.set('javascript', javascriptGenerator);
-      this._generators.set('lua', luaGenerator);
-
-      //see(defaultToolbox);
-      //see(this._toolboxes.get('default'));
-    });
-  }
-
-  public setDefaultToolbox(name: string, value: ToolboxDefinition): void {
-    const currentToolbox = this._toolboxes.get('default');
-    if (currentToolbox) {
-      this._toolboxes.set('default', currentToolbox);
-    } else {
-      console.warn(
-        `Failed to set default toolbox to ${name}: Toolbox not found`
-      );
-    }
+    this._generators.set('python', pythonGenerator);
+    this._generators.set('javascript', javascriptGenerator);
+    this._generators.set('lua', luaGenerator);
   }
 
   /**
