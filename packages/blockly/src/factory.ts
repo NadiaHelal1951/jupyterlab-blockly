@@ -46,6 +46,7 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
   protected createNewWidget(
     context: DocumentRegistry.IContext<DocumentModel>
   ): BlocklyEditor {
+    //registry: BlocklyRegistry;
     // Set a map to the model. The widgets manager expects a Notebook model
     // but the only notebook property it uses is the metadata.
     context.model['metadata'] = new Map();
@@ -55,6 +56,7 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
       this._mimetypeService
     );
     const content = new BlocklyPanel(context, manager, this._rendermime);
+
     return new BlocklyEditor({ context, content, manager });
   }
 }

@@ -20,16 +20,21 @@ import {
   Spacer
 } from './toolbar';
 import { CodeCell } from '@jupyterlab/cells';
+import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
+import { defaultToolbox } from './utils';
+//import { BlocklyRegistry } from './registry';
+//import tracenotebook from 'jupyterlab-blockly-extension'
 
 /**
  * DocumentWidget: widget that represents the view or editor for a file type.
  */
+
 export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   constructor(options: BlocklyEditor.IOptions) {
     super(options);
-
+    // const registery = new BlocklyRegistry();
+    // const registery = options.manager.registry;
     // Loading the ITranslator
-    // const trans = this.translator.load('jupyterlab');
 
     // Create and add a button to the toolbar to execute
     // the code.
@@ -40,7 +45,113 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
       onClick: () => (this.content.layout as BlocklyLayout).run(),
       tooltip: 'Run Code'
     });
+
+    const insertbutton = new BlocklyButton({
+      label: 'Insert toolbox',
+      onClick() {
+        new Promise<ToolboxDefinition>(resolve => {
+          let userInput: ToolboxDefinition | null = null;
+          const dialog = document.createElement('dialog');
+          dialog.style.backgroundColor = '#597ED5';
+          dialog.style.borderRadius = '10px';
+          dialog.style.position = 'fixed';
+          dialog.style.top = '50%';
+          dialog.style.left = '50%';
+          dialog.style.transform = 'translate(-50%, -50%)';
+          dialog.style.padding = '20px';
+          dialog.style.zIndex = '9999';
+
+          const title = document.createElement('h1');
+          title.textContent =
+            'Enter Toolbox JSON data please. Press "Default" if you want default toolbox';
+          title.style.fontSize = '20px';
+          title.style.marginBottom = '10px';
+          title.style.textAlign = 'center';
+          title.style.color = 'white';
+
+          dialog.appendChild(title);
+
+          const jsonInput = document.createElement('textarea');
+          jsonInput.placeholder =
+            'Please make sure it follows toolbox API\nE.g.{"kind"{..}"contents"[{..}]};';
+          jsonInput.style.width = '95%';
+          jsonInput.style.height = '200px';
+          jsonInput.style.borderRadius = '10px';
+          jsonInput.style.backgroundColor = '#89C5E4';
+          jsonInput.style.padding = '10px';
+          jsonInput.style.resize = 'none';
+
+          dialog.appendChild(jsonInput);
+
+          const submitButton = document.createElement('button');
+          submitButton.textContent = 'Submit';
+          submitButton.style.backgroundColor = '#4CAF50';
+          submitButton.style.borderRadius = '5px';
+          submitButton.style.border = 'none';
+          submitButton.style.color = 'white';
+          submitButton.style.padding = '10px';
+          submitButton.style.cursor = 'pointer';
+          submitButton.style.marginTop = '10px';
+
+          dialog.appendChild(submitButton);
+
+          const defaultButton = document.createElement('button');
+          defaultButton.textContent = 'Default';
+          defaultButton.style.backgroundColor = '#4CAF50';
+          defaultButton.style.borderRadius = '5px';
+          defaultButton.style.border = 'none';
+          defaultButton.style.color = 'white';
+          defaultButton.style.padding = '10px';
+          defaultButton.style.cursor = 'pointer';
+          defaultButton.style.marginLeft = '5px';
+          defaultButton.style.marginTop = '10px';
+
+          dialog.appendChild(defaultButton);
+
+          const cancelButton = document.createElement('button');
+          cancelButton.textContent = 'Cancel';
+          cancelButton.style.backgroundColor = '#DF4D4D';
+          cancelButton.style.borderRadius = '5px';
+          cancelButton.style.border = 'none';
+          cancelButton.style.color = 'white';
+          cancelButton.style.padding = '10px';
+          cancelButton.style.cursor = 'pointer';
+          cancelButton.style.marginLeft = '5px';
+          cancelButton.style.marginTop = '10px';
+
+          dialog.appendChild(cancelButton);
+
+          submitButton.addEventListener('click', () => {
+            const inputString = jsonInput.value;
+            userInput = eval(`(${inputString})`);
+            // registery.registerToolbox('default', userInput);
+            options.manager.registerToolbox('default', userInput);
+            dialog.close();
+            resolve(userInput);
+          });
+
+          defaultButton.addEventListener('click', () => {
+            console.log('registery.registerToolbox', defaultToolbox);
+            // registery.registerToolbox('default', userInput);
+            options.manager.registerToolbox('default', defaultToolbox);
+            dialog.close();
+            resolve(defaultToolbox);
+          });
+
+          cancelButton.addEventListener('click', () => {
+            userInput = null;
+            dialog.close();
+            resolve(userInput);
+          });
+
+          document.body.appendChild(dialog);
+          dialog.showModal();
+        });
+      }
+    });
+
     this.toolbar.addItem('run', button);
+    this.toolbar.addItem('Insert', insertbutton);
     this.toolbar.addItem('spacer', new Spacer());
     this.toolbar.addItem(
       'toolbox',
@@ -67,6 +178,48 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     this.content.dispose();
     super.dispose();
   }
+
+  /**test = new Promise<void>(resolve => {
+    const dialog = document.createElement('dialog');
+    dialog.style.backgroundColor = '#597ED5';
+    dialog.style.borderRadius = '10px';
+    dialog.style.position = 'fixed';
+    dialog.style.top = '50%';
+    dialog.style.left = '50%';
+    dialog.style.transform = 'translate(-50%, -50%)';
+    dialog.style.padding = '20px';
+    dialog.style.zIndex = '9999';
+
+    const title = document.createElement('h1');
+    title.textContent =
+      'Enter Toolbox JSON data please. Press "Default" if you want default toolbox';
+    title.style.fontSize = '20px';
+    title.style.marginBottom = '10px';
+    title.style.textAlign = 'center';
+    title.style.color = 'white';
+
+    dialog.appendChild(title);
+    
+    const submitButton = document.createElement('button');
+    submitButton.textContent = code;
+    submitButton.style.backgroundColor = 'black';
+    submitButton.style.borderRadius = '5px';
+    submitButton.style.border = 'none';
+    submitButton.style.color = 'white';
+    submitButton.style.padding = '10px';
+    submitButton.style.cursor = 'pointer';
+    submitButton.style.marginTop = '10px';
+  
+    dialog.appendChild(submitButton);
+  
+    submitButton.addEventListener('click', () => {
+      dialog.close();
+      resolve();
+    });
+
+    document.body.appendChild(dialog);
+    dialog.showModal();
+  });**/
 }
 
 export namespace BlocklyEditor {

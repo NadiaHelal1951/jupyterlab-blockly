@@ -51,6 +51,10 @@ export class BlocklyManager {
     return this._registry.toolboxes.get(this._toolbox);
   }
 
+  get registry(): BlocklyRegistry {
+    return this._registry;
+  }
+
   /**
    * Returns the mimeType for the selected kernel.
    *
@@ -115,6 +119,12 @@ export class BlocklyManager {
       this._toolbox = toolbox ? name : 'default';
       this._changed.emit('toolbox');
     }
+  }
+
+  registerToolbox(name: string, value: ToolboxDefinition): void {
+    console.log('manager.registerToolbox', name, value);
+    this._registry.registerToolbox(name, value);
+    this._changed.emit('toolbox');
   }
 
   /**
