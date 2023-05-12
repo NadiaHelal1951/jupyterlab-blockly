@@ -80,7 +80,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
 
     // Creating the tracker for the document
     const tracker = new WidgetTracker<BlocklyEditor>({ namespace });
-    tracenotebook(notebookTracker, 'hi');
+    tracenotebook(notebookTracker, 'print(x)');
     // Handle state restoration.
     //tracker.currentWidget.content
     if (restorer) {

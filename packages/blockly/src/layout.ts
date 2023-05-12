@@ -176,7 +176,7 @@ export class BlocklyLayout extends SplitLayout {
     } else {
       CodeCell.execute(this._cell, this._sessionContext)
         .then(() => this._resizeWorkspace())
-        .catch(e => console.error(e));
+        .catch(e => console.error(e)); //produces output for cell
 
       const test = new Promise<void>(resolve => {
         const dialog = document.createElement('dialog');
