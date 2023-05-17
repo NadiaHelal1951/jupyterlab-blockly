@@ -14,9 +14,10 @@ import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { IKernelMenu, IMainMenu } from '@jupyterlab/mainmenu';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import { tracenotebook } from './notebook';
+//import { tracenotebook } from './notebook';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
-
+//import { notebookTracker } from 'jupyterlab-blockly';
+//import {s} from 'jupyterlab-blockly'
 import {
   WidgetRenderer,
   registerWidgetManager
@@ -25,8 +26,11 @@ import {
 import { BlocklyEditorFactory } from 'jupyterlab-blockly';
 import { IBlocklyRegistry } from 'jupyterlab-blockly';
 import { BlocklyEditor } from 'jupyterlab-blockly';
-
+import { tracenotebook } from './notebook';
 import { blockly_icon } from './icons';
+//import { Options } from 'blockly';
+//import { BlocklyButton } from 'jupyterlab-blockly/src/toolbar';
+//import { Options } from 'blockly';
 
 /**
  * The name of the factory that creates the editor widgets.
@@ -38,10 +42,13 @@ const PALETTE_CATEGORY = 'Blockly editor';
 namespace CommandIDs {
   export const createNew = 'blockly:create-new-blockly-file';
 }
-
+//let notebookTracker2: INotebookTracker;
 /**
  * The id of the translation plugin.
  */
+
+//let myNotebookTracker: INotebookTracker = notebookTracker;
+
 const PLUGIN_ID = '@jupyterlab/translation-extension:plugin';
 /**
  * Initialization data for the jupyterlab-blocky extension.
@@ -62,7 +69,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
   provides: IBlocklyRegistry,
   activate: (
     app: JupyterFrontEnd,
-    notebookTracker: INotebookTracker,
+    notebooktracker: INotebookTracker,
     restorer: ILayoutRestorer,
     rendermime: IRenderMimeRegistry,
     editorServices: IEditorServices,
@@ -75,14 +82,23 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     widgetRegistry: IJupyterWidgetRegistry | null
   ): IBlocklyRegistry => {
     console.log('JupyterLab extension jupyterlab-blocky is activated!');
+    // @ts-expect-error Since its not found for some reason
+    window.transferCallback = s => {
+      console.log('s:', s);
+      tracenotebook(notebooktracker, s);
+    };
     // Namespace for the tracker
     const namespace = 'jupyterlab-blocky';
-
+    //notebooktracker = notebookTracker;
     // Creating the tracker for the document
     const tracker = new WidgetTracker<BlocklyEditor>({ namespace });
-    tracenotebook(notebookTracker, 'print(x)');
+    //notebookTracker2 = notebooktracker
     // Handle state restoration.
-    //tracker.currentWidget.content
+    //debugger;
+    //tracenotebook(notebooktracker, "x = 'hi'");
+    //console.log('test',tracker.widgetUpdated())
+    //tracenotebook(notebooktracker, 'check');
+
     if (restorer) {
       // When restoring the app, if the document was open, reopen it
       restorer.restore(tracker, {
@@ -150,7 +166,6 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       const currentLocale: string = setting.get('locale').composite as string;
       return currentLocale;
     }
-
     // Wait for the application to be restored and
     // for the settings for this plugin to be loaded
     settings.load(PLUGIN_ID).then(setting => {
@@ -261,7 +276,6 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
         );
       });
     }
-
     return widgetFactory.registry;
   }
 };
@@ -275,3 +289,4 @@ function* widgetRenderers(cells: CodeCell[]): IterableIterator<WidgetRenderer> {
 }
 
 export default plugin;
+//export {notebookTracker2}

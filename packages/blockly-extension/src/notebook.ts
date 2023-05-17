@@ -1,9 +1,10 @@
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { CodeCell } from '@jupyterlab/cells';
+//import { s } from 'jupyterlab-blockly';
 
 export function tracenotebook(notebookTracker: INotebookTracker, code: string) {
   // Get the currently active notebook panel
-
+  //code = s;
   const notePanel = notebookTracker.currentWidget;
 
   // Get the currently active code cell
@@ -17,7 +18,7 @@ export function tracenotebook(notebookTracker: INotebookTracker, code: string) {
   }
 
   // Listen for changes to the active cell
-  notebookTracker.activeCellChanged.connect((tracker, cell) => {
+  /**notebookTracker.activeCellChanged.connect((tracker, cell) => {
     console.log('Active cell changed:', cell);
 
     if (cell instanceof CodeCell) {
@@ -26,6 +27,5 @@ export function tracenotebook(notebookTracker: INotebookTracker, code: string) {
     } else {
       console.log('No active cell found');
     }
-  });
-  //test;
+  });**/
 }

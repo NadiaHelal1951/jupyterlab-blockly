@@ -1,7 +1,7 @@
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ISessionContext, showErrorMessage } from '@jupyterlab/apputils';
 import { CodeCell, CodeCellModel } from '@jupyterlab/cells';
-
+//import { INotebookTracker } from '@jupyterlab/notebook';
 import { Message } from '@lumino/messaging';
 import { SplitLayout, SplitPanel, Widget } from '@lumino/widgets';
 import { IIterator, ArrayIterator } from '@lumino/algorithm';
@@ -9,13 +9,14 @@ import { Signal } from '@lumino/signaling';
 
 import * as Blockly from 'blockly';
 //import { INotebookTracker } from '@jupyterlab/notebook';
-
+//import plugin from 'jupyterlab-blockly'
 import { BlocklyManager } from './manager';
 import { THEME } from './utils';
 
 /**
  * A blockly layout to host the Blockly editor.
  */
+//export let notebookTracker: INotebookTracker;
 export class BlocklyLayout extends SplitLayout {
   private _host: Widget;
   private _manager: BlocklyManager;
@@ -101,7 +102,7 @@ export class BlocklyLayout extends SplitLayout {
     super.init();
     // Add the blockly container into the DOM
     this.addWidget(this._host);
-    this.addWidget(this._cell);
+    //this.addWidget(this._cell);
   }
 
   /**
@@ -156,7 +157,7 @@ export class BlocklyLayout extends SplitLayout {
    * Generates and runs the code from the current workspace.
    */
 
-  public run(): string {
+  run(): string {
     // Get extra code from the blocks in the workspace.
     const extra_init = this.getBlocksToplevelInit();
     // Serializing our workspace into the chosen language generator.
@@ -173,57 +174,8 @@ export class BlocklyLayout extends SplitLayout {
           If there isn't a valid kernel please install 'xeus-python' from Pypi.org or using mamba.
           `
       );
-    } else {
-      CodeCell.execute(this._cell, this._sessionContext)
-        .then(() => this._resizeWorkspace())
-        .catch(e => console.error(e)); //produces output for cell
-
-      const test = new Promise<void>(resolve => {
-        const dialog = document.createElement('dialog');
-        dialog.style.backgroundColor = '#597ED5';
-        dialog.style.borderRadius = '10px';
-        dialog.style.position = 'fixed';
-        dialog.style.top = '50%';
-        dialog.style.left = '50%';
-        dialog.style.transform = 'translate(-50%, -50%)';
-        dialog.style.padding = '20px';
-        dialog.style.zIndex = '9999';
-
-        const title = document.createElement('h1');
-        title.textContent =
-          'Enter Toolbox JSON data please. Press "Default" if you want default toolbox';
-        title.style.fontSize = '20px';
-        title.style.marginBottom = '10px';
-        title.style.textAlign = 'center';
-        title.style.color = 'white';
-
-        dialog.appendChild(title);
-
-        const submitButton = document.createElement('button');
-        submitButton.textContent = this._cell.model.value.text;
-        submitButton.style.backgroundColor = 'black';
-        submitButton.style.borderRadius = '5px';
-        submitButton.style.border = 'none';
-        submitButton.style.color = 'white';
-        submitButton.style.padding = '10px';
-        submitButton.style.cursor = 'pointer';
-        submitButton.style.marginTop = '10px';
-
-        dialog.appendChild(submitButton);
-
-        submitButton.addEventListener('click', () => {
-          dialog.close();
-          resolve();
-        });
-
-        document.body.appendChild(dialog);
-        dialog.showModal();
-      });
-      test;
     }
-
-    const codecell = this._cell.model.value.text;
-    return codecell;
+    return this.cell.model.value.text;
   }
 
   /**

@@ -96,4 +96,5 @@
     },
     "webpackConfig": "./webpack.config.js"
   }
+  
 }

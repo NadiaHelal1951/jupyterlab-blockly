@@ -10,7 +10,7 @@ import { SplitPanel } from '@lumino/widgets';
 import { Signal } from '@lumino/signaling';
 
 import type Blockly from 'blockly';
-
+//import { INotebookTracker } from '@jupyterlab/notebook';
 import { BlocklyLayout } from './layout';
 import { BlocklyManager } from './manager';
 import {
@@ -22,13 +22,14 @@ import {
 import { CodeCell } from '@jupyterlab/cells';
 import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 import { defaultToolbox } from './utils';
+//import notebookTracker from 'jupyterlab-blockly-extension'
 //import { BlocklyRegistry } from './registry';
 //import tracenotebook from 'jupyterlab-blockly-extension'
 
 /**
  * DocumentWidget: widget that represents the view or editor for a file type.
  */
-
+export let s: string;
 export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   constructor(options: BlocklyEditor.IOptions) {
     super(options);
@@ -40,7 +41,11 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
       label: '',
       icon: notebookIcon,
       className: 'jp-blockly-runButton',
-      onClick: () => (this.content.layout as BlocklyLayout).run(),
+      onClick: () => {
+        s = (this.content.layout as BlocklyLayout).run();
+        // @ts-expect-error Since its not found for some reason
+        window.transferCallback?.(s);
+      },
       tooltip: 'Blocks to Code'
     });
 
