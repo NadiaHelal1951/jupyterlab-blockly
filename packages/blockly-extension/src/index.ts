@@ -89,15 +89,9 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     };
     // Namespace for the tracker
     const namespace = 'jupyterlab-blocky';
-    //notebooktracker = notebookTracker;
+
     // Creating the tracker for the document
     const tracker = new WidgetTracker<BlocklyEditor>({ namespace });
-    //notebookTracker2 = notebooktracker
-    // Handle state restoration.
-    //debugger;
-    //tracenotebook(notebooktracker, "x = 'hi'");
-    //console.log('test',tracker.widgetUpdated())
-    //tracenotebook(notebooktracker, 'check');
 
     if (restorer) {
       // When restoring the app, if the document was open, reopen it

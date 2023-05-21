@@ -22,6 +22,7 @@ import {
 import { CodeCell } from '@jupyterlab/cells';
 import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 import { defaultToolbox } from './utils';
+//import { ToolboxItem } from 'blockly';
 //import notebookTracker from 'jupyterlab-blockly-extension'
 //import { BlocklyRegistry } from './registry';
 //import tracenotebook from 'jupyterlab-blockly-extension'
@@ -30,6 +31,143 @@ import { defaultToolbox } from './utils';
  * DocumentWidget: widget that represents the view or editor for a file type.
  */
 export let s: string;
+export function customexecute(options: any): ToolboxDefinition {
+  let userInput: ToolboxDefinition | null = null;
+  const dialog2 = document.createElement('dialog');
+  dialog2.style.backgroundColor = '#597ED5';
+  dialog2.style.borderRadius = '10px';
+  dialog2.style.position = 'fixed';
+  dialog2.style.top = '50%';
+  dialog2.style.left = '50%';
+  dialog2.style.transform = 'translate(-50%, -50%)';
+  dialog2.style.padding = '20px';
+  dialog2.style.zIndex = '9999';
+
+  const submitButton = document.createElement('button');
+  submitButton.textContent = 'Submit';
+  submitButton.style.backgroundColor = 'grey';
+  submitButton.style.borderRadius = '5px';
+  submitButton.style.border = 'none';
+  submitButton.style.color = 'white';
+  submitButton.style.padding = '10px';
+  submitButton.style.cursor = 'pointer';
+  submitButton.style.marginTop = '10px';
+
+  const title2 = document.createElement('h1');
+  title2.textContent =
+    'Excellent! Now please choose the specifics of your toolbox.';
+  title2.style.fontSize = '20px';
+  title2.style.marginBottom = '10px';
+  title2.style.textAlign = 'center';
+  title2.style.color = 'white';
+
+  const nameLabel = document.createElement('label');
+  nameLabel.innerText = 'Create the name of the toolbox here:';
+  nameLabel.style.color = 'white';
+  nameLabel.setAttribute('for', 'nameInput');
+
+  const nameInput = document.createElement('textarea');
+  nameInput.style.width = '60%';
+  nameInput.style.height = '25px';
+  nameInput.style.borderRadius = '10px';
+  nameInput.style.padding = '5px';
+  nameInput.style.margin = 'auto';
+
+  const colorLabel = document.createElement('label');
+  colorLabel.innerText = 'Choose the desired color of the toolbox:';
+  colorLabel.style.color = 'white';
+  colorLabel.setAttribute('for', 'colorInput');
+
+  const colorInput = document.createElement('input');
+  colorInput.id = 'colorInput';
+  colorInput.type = 'color';
+  colorInput.style.width = '60%';
+  colorInput.style.height = '25px';
+  colorInput.style.borderRadius = '10px';
+  colorInput.style.padding = '5px';
+  colorInput.style.margin = 'auto';
+
+  let customresult = '';
+
+  const choiceLabel = document.createElement('label');
+  choiceLabel.innerText = 'Choose either "Variable" or "Procedure":';
+  choiceLabel.style.color = 'white';
+
+  const variableButton = document.createElement('button');
+  variableButton.textContent = 'Variable';
+  variableButton.style.marginRight = '10px';
+  variableButton.addEventListener(
+    'click',
+    handleChoiceClick.bind(null, 'variable')
+  );
+
+  const procedureButton = document.createElement('button');
+  procedureButton.textContent = 'Procedure';
+  procedureButton.addEventListener(
+    'click',
+    handleChoiceClick.bind(null, 'procedure')
+  );
+
+  function handleChoiceClick(choice: string): void {
+    const selectedButton =
+      choice === 'variable' ? variableButton : procedureButton;
+
+    selectedButton.style.transform = 'translateX(100%)';
+    selectedButton.style.transition = 'transform 0.5s';
+
+    //unselectedButton.style.transform = 'translateX(0)';
+    //unselectedButton.style.transition = 'transform 0.5s';
+
+    if (choice === 'variable') {
+      customresult = 'VARIABLE';
+    } else {
+      customresult = 'PROCEDURE';
+    }
+  }
+
+  dialog2.appendChild(title2);
+
+  dialog2.appendChild(nameLabel);
+  dialog2.appendChild(nameInput);
+
+  dialog2.appendChild(colorLabel);
+  dialog2.appendChild(colorInput);
+
+  dialog2.appendChild(choiceLabel);
+  dialog2.appendChild(variableButton);
+  dialog2.appendChild(procedureButton);
+  //dialog2.appendChild(choiceResult);
+
+  dialog2.appendChild(submitButton);
+
+  submitButton.addEventListener('click', () => {
+    try {
+      const inputString = {
+        kind: 'categoryToolbox',
+        contents: [
+          {
+            kind: 'CATEGORY',
+            colour: colorInput.value,
+            custom: customresult,
+            name: nameInput.value
+          }
+        ]
+      };
+
+      userInput = inputString;
+      options.manager.registerToolbox('default', userInput);
+      dialog2.close();
+    } catch (e) {
+      console.error(e);
+      alert('Invalid format, please try again.');
+    }
+  });
+
+  document.body.appendChild(dialog2);
+  dialog2.showModal();
+
+  return userInput;
+}
 export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   constructor(options: BlocklyEditor.IOptions) {
     super(options);
@@ -66,7 +204,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
           const title = document.createElement('h1');
           title.textContent =
-            'Enter Toolbox JSON data please. Press "Default" if you want default toolbox';
+            'Welcome!\nHow would you like to create your toolbox?';
           title.style.fontSize = '20px';
           title.style.marginBottom = '10px';
           title.style.textAlign = 'center';
@@ -74,29 +212,17 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
           dialog.appendChild(title);
 
-          const jsonInput = document.createElement('textarea');
-          jsonInput.placeholder =
-            'Please make sure it follows toolbox API\nE.g.{"kind"{..}"contents"[{..}]};';
-          jsonInput.style.width = '95%';
-          jsonInput.style.height = '200px';
-          jsonInput.style.borderRadius = '10px';
-          jsonInput.style.backgroundColor = '#89C5E4';
-          jsonInput.style.padding = '10px';
-          jsonInput.style.resize = 'none';
+          const customizeButton = document.createElement('button');
+          customizeButton.textContent = 'Customize';
+          customizeButton.style.backgroundColor = '#4CAF50';
+          customizeButton.style.borderRadius = '5px';
+          customizeButton.style.border = 'none';
+          customizeButton.style.color = 'white';
+          customizeButton.style.padding = '10px';
+          customizeButton.style.cursor = 'pointer';
+          customizeButton.style.marginTop = '10px';
 
-          dialog.appendChild(jsonInput);
-
-          const submitButton = document.createElement('button');
-          submitButton.textContent = 'Submit';
-          submitButton.style.backgroundColor = '#4CAF50';
-          submitButton.style.borderRadius = '5px';
-          submitButton.style.border = 'none';
-          submitButton.style.color = 'white';
-          submitButton.style.padding = '10px';
-          submitButton.style.cursor = 'pointer';
-          submitButton.style.marginTop = '10px';
-
-          dialog.appendChild(submitButton);
+          dialog.appendChild(customizeButton);
 
           const defaultButton = document.createElement('button');
           defaultButton.textContent = 'Default';
@@ -124,17 +250,10 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
           dialog.appendChild(cancelButton);
 
-          submitButton.addEventListener('click', () => {
-            try {
-              const inputString = jsonInput.value;
-              userInput = eval(`(${inputString})`);
-              options.manager.registerToolbox('default', userInput);
-              dialog.close();
-              resolve(userInput);
-            } catch (e) {
-              console.error(e);
-              alert('Invalid format, please try again.');
-            }
+          customizeButton.addEventListener('click', () => {
+            dialog.close();
+            const userInput2 = customexecute(options);
+            resolve(userInput2);
           });
 
           defaultButton.addEventListener('click', () => {
