@@ -21,8 +21,12 @@ export class BlocklyRegistry implements IBlocklyRegistry {
   private _toolboxes = new Map<string, ToolboxDefinition>();
 
   constructor() {
-    this._toolboxes.set('default', defaultToolbox);
+    /**this._toolboxes.set('default', {
+      kind: Input1.kind,
+      contents: Input1.contents.concat(Input2.contents)
+    });**/
 
+    this._toolboxes.set('default', defaultToolbox);
     this._generators.set('python', pythonGenerator);
     this._generators.set('javascript', javascriptGenerator);
     this._generators.set('lua', luaGenerator);
