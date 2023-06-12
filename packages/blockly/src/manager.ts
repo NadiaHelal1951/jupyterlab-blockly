@@ -8,7 +8,11 @@ import { ISignal, Signal } from '@lumino/signaling';
 import * as Blockly from 'blockly';
 
 import { BlocklyRegistry } from './registry';
-import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
+import {
+  FlyoutDefinition,
+  ToolboxDefinition
+} from 'blockly/core/utils/toolbox';
+//import { BlockDefinition } from 'blockly/core/blocks';
 
 /**
  * BlocklyManager the manager for each document
@@ -47,7 +51,7 @@ export class BlocklyManager {
   /**
    * Returns the selected toolbox.
    */
-  get toolbox(): ToolboxDefinition {
+  get toolbox(): ToolboxDefinition | FlyoutDefinition {
     return this._registry.toolboxes.get(this._toolbox);
   }
 
@@ -121,7 +125,10 @@ export class BlocklyManager {
     }
   }
 
-  registerToolbox(name: string, value: ToolboxDefinition): void {
+  registerToolbox(
+    name: string,
+    value: ToolboxDefinition | FlyoutDefinition
+  ): void {
     console.log('manager.registerToolbox', name, value);
     this._registry.registerToolbox(name, value);
     this._changed.emit('toolbox');

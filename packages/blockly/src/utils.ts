@@ -352,20 +352,73 @@ export const defaultToolbox = {
     }
   ]
 };
+
+Blockly.Blocks['DataSource/position'] = {
+  init: function () {
+    this.jsonInit({
+      type: 'DataSource/position',
+      message0: 'device position along %1 %2 axis %3 ',
+      args0: [
+        {
+          name: '',
+          type: 'input_dummy'
+        },
+        {
+          name: 'text',
+          type: 'field_input',
+          text: ''
+        },
+        {
+          name: '',
+          type: 'input_dummy'
+        }
+      ],
+      colour: 339,
+      output: 'DataSource',
+
+      inputsInline: true,
+      tooltip: 'position',
+      helpUrl: ''
+    });
+  }
+};
+
+// Define which blocks are available in the toolbox.
 export const Input = {
   kind: 'categoryToolbox',
   contents: [
     {
-      kind: 'CATEGORY',
-      colour: '330',
-      custom: 'VARIABLE',
-      name: 'Variables'
+      kind: 'category',
+      name: 'Blocks',
+      categorystyle: 'list_category',
+      contents: [
+        {
+          kind: 'block',
+          type: 'DataSource/position'
+        },
+        {
+          kind: 'block',
+          type: 'controls_forEach'
+        },
+        {
+          kind: 'block',
+          type: 'math_on_list'
+        },
+        {
+          kind: 'block',
+          type: 'text_print'
+        },
+        {
+          kind: 'block',
+          type: 'controls_flow_statements'
+        }
+      ]
     },
     {
-      kind: 'CATEGORY',
-      colour: '290',
-      custom: 'PROCEDURE',
-      name: 'Functions'
+      kind: 'category',
+      name: 'Variables',
+      categorystyle: 'variable_category',
+      custom: 'VARIABLE'
     }
   ]
 };

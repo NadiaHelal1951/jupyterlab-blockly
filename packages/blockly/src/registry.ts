@@ -4,9 +4,12 @@ import { javascriptGenerator } from 'blockly/javascript';
 import { luaGenerator } from 'blockly/lua';
 import En from 'blockly/msg/en';
 import { IBlocklyRegistry } from './token';
-import type { ToolboxDefinition } from 'blockly/core/utils/toolbox';
+import type {
+  FlyoutDefinition,
+  ToolboxDefinition
+} from 'blockly/core/utils/toolbox';
 import { BlockDefinition } from 'blockly/core/blocks';
-import { defaultToolbox } from './utils';
+import { Input } from './utils';
 //import { BlocklyEditor } from './widget';
 //import { BlocklyButton } from './toolbar';
 
@@ -18,7 +21,7 @@ import { defaultToolbox } from './utils';
  */
 export class BlocklyRegistry implements IBlocklyRegistry {
   private _generators = new Map<string, Blockly.Generator>();
-  private _toolboxes = new Map<string, ToolboxDefinition>();
+  private _toolboxes = new Map<string, ToolboxDefinition | FlyoutDefinition>();
 
   constructor() {
     /**this._toolboxes.set('default', {
@@ -26,7 +29,7 @@ export class BlocklyRegistry implements IBlocklyRegistry {
       contents: Input1.contents.concat(Input2.contents)
     });**/
 
-    this._toolboxes.set('default', defaultToolbox);
+    this._toolboxes.set('default', Input);
     this._generators.set('python', pythonGenerator);
     this._generators.set('javascript', javascriptGenerator);
     this._generators.set('lua', luaGenerator);
@@ -36,7 +39,7 @@ export class BlocklyRegistry implements IBlocklyRegistry {
    * Returns a map with all the toolboxes.
    */
 
-  get toolboxes(): Map<string, ToolboxDefinition> {
+  get toolboxes(): Map<string, ToolboxDefinition | FlyoutDefinition> {
     return this._toolboxes;
   }
 
@@ -54,18 +57,42 @@ export class BlocklyRegistry implements IBlocklyRegistry {
    *
    * @argument value Toolbox to register.
    */
-  registerToolbox(name: string, value: ToolboxDefinition): void {
+  registerToolbox(
+    name: string,
+    value: ToolboxDefinition | FlyoutDefinition
+  ): void {
     console.log('registerToolbox', name, value);
     this._toolboxes.set(name, value);
+    //this._toolboxes.set('default', Input)
   }
 
   /**
-   * Register new blocks.
+   * Register block definitions.
    *
-   * @argument blocks Blocks to register.
+   * @argument blocks A list of block definitions to register.
    */
   registerBlocks(blocks: BlockDefinition[]): void {
     Blockly.defineBlocksWithJsonArray(blocks);
+    Blockly.common.defineBlocksWithJsonArray([
+      {
+        type: 'list_range',
+        message0: 'create list of numbers from %1 up to %2',
+        args0: [
+          {
+            type: 'field_number',
+            name: 'FIRST',
+            value: 0
+          },
+          {
+            type: 'field_number',
+            name: 'LAST',
+            value: 5
+          }
+        ],
+        output: 'Array',
+        style: 'list_blocks'
+      }
+    ]);
   }
 
   /**

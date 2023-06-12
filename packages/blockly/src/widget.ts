@@ -16,12 +16,15 @@ import { BlocklyManager } from './manager';
 import {
   BlocklyButton,
   SelectGenerator,
-  SelectToolbox,
+  //SelectToolbox,
   Spacer
 } from './toolbar';
 import { CodeCell } from '@jupyterlab/cells';
-import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
-import { defaultToolbox } from './utils';
+import {
+  FlyoutDefinition,
+  ToolboxDefinition
+} from 'blockly/core/utils/toolbox';
+import { Input, defaultToolbox } from './utils';
 //import notebookTracker from 'jupyterlab-blockly-extension'
 //import { BlocklyRegistry } from './registry';
 //import tracenotebook from 'jupyterlab-blockly-extension'
@@ -49,11 +52,46 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
       tooltip: 'Blocks to Code'
     });
 
+    const customizebutton = new BlocklyButton({
+      label: 'Customize Blocks',
+      onClick() {
+        new Promise<ToolboxDefinition | FlyoutDefinition>(resolve => {
+          const inputElement = document.createElement('input');
+          inputElement.type = 'file';
+          inputElement.accept = '.js';
+
+          inputElement.addEventListener('change', () => {
+            const file = inputElement.files[0];
+            const reader = new FileReader();
+
+            reader.onload = event => {
+              try {
+                const fileContents = event.target.result as string;
+                const userInput = eval(`(${fileContents})`);
+                options.manager.registerToolbox('default', userInput);
+                resolve(userInput);
+              } catch (e) {
+                console.error(e);
+                alert(
+                  'Invalid format, please make sure the file is .js and try again.'
+                );
+                resolve(null);
+              }
+            };
+
+            reader.readAsText(file);
+          });
+
+          inputElement.click();
+        });
+      }
+    });
+
     const insertbutton = new BlocklyButton({
       label: 'Insert Toolbox',
       onClick() {
-        new Promise<ToolboxDefinition>(resolve => {
-          let userInput: ToolboxDefinition | null = null;
+        new Promise<ToolboxDefinition | FlyoutDefinition>(resolve => {
+          let userInput: ToolboxDefinition | null | FlyoutDefinition = null;
           const dialog = document.createElement('dialog');
           dialog.style.backgroundColor = '#597ED5';
           dialog.style.borderRadius = '10px';
@@ -138,9 +176,9 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           });
 
           defaultButton.addEventListener('click', () => {
-            userInput = defaultToolbox;
-            console.log('registery.registerToolbox', userInput);
+            userInput = Input as any;
             options.manager.registerToolbox('default', userInput);
+            //options.manager.registry.registerBlocks
             dialog.close();
             resolve(defaultToolbox);
           });
@@ -159,15 +197,17 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
     this.toolbar.addItem('run', button);
     this.toolbar.addItem('Insert', insertbutton);
+
     this.toolbar.addItem('spacer', new Spacer());
-    this.toolbar.addItem(
+    /**this.toolbar.addItem(
       'toolbox',
       new SelectToolbox({
         label: 'Toolbox',
         tooltip: 'Select tollbox',
         manager: options.manager
       })
-    );
+    );**/
+    this.toolbar.addItem('Customize', customizebutton);
     this.toolbar.addItem(
       'generator',
       new SelectGenerator({

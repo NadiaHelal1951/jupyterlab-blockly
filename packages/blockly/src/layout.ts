@@ -12,6 +12,7 @@ import * as Blockly from 'blockly';
 //import plugin from 'jupyterlab-blockly'
 import { BlocklyManager } from './manager';
 import { THEME } from './utils';
+//import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 
 /**
  * A blockly layout to host the Blockly editor.
