@@ -58,7 +58,7 @@ export function addBlock(parsedContents: any, toolname: any): any {
       {
         kind: 'category',
         name: toolname,
-        categorystyle: 'list_category',
+        //categorystyle: 'list_category',
         contents: [
           {
             kind: 'block',
@@ -112,7 +112,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
           const title = document.createElement('h1');
           title.textContent =
-            'Please insert the type of block and its JSON file.';
+            'Please write the "type" of block and insert its JSON file using the Upload button.';
           title.style.fontSize = '20px';
           title.style.marginBottom = '10px';
           title.style.textAlign = 'center';
@@ -190,29 +190,6 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
             }
           });
 
-          const clearallButton = document.createElement('button');
-          clearallButton.textContent = 'Clear All';
-          clearallButton.style.backgroundColor = '#4CAF50';
-          clearallButton.style.borderRadius = '5px';
-          clearallButton.style.border = 'none';
-          clearallButton.style.color = 'white';
-          clearallButton.style.padding = '10px';
-          clearallButton.style.cursor = 'pointer';
-          clearallButton.style.marginLeft = '5px';
-          clearallButton.style.marginTop = '10px';
-
-          dialog.appendChild(clearallButton);
-
-          clearallButton.addEventListener('click', () => {
-            customUserToolbox = {
-              kind: 'categoryToolbox',
-              contents: []
-            };
-            options.manager.registerToolbox('default', customUserToolbox);
-            dialog.close();
-            resolve('');
-          });
-
           const cancelButton = document.createElement('button');
           cancelButton.textContent = 'Cancel';
           cancelButton.style.backgroundColor = '#DF4D4D';
@@ -234,6 +211,17 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           document.body.appendChild(dialog);
           dialog.showModal();
         });
+      }
+    });
+
+    const clearallButton = new BlocklyButton({
+      label: 'Clear Current Toolbox',
+      onClick() {
+        customUserToolbox = {
+          kind: 'categoryToolbox',
+          contents: []
+        };
+        options.manager.registerToolbox('default', customUserToolbox);
       }
     });
 
@@ -360,7 +348,8 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
     this.toolbar.addItem('run', button);
     this.toolbar.addItem('Insert', insertbutton);
-
+    //this.toolbar.addItem('spacer', new Spacer());
+    this.toolbar.addItem('Clear Current Toolbox', clearallButton);
     this.toolbar.addItem('spacer', new Spacer());
     /**this.toolbar.addItem(
       'toolbox',
