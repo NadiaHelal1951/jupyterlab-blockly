@@ -9,7 +9,8 @@ import type {
   ToolboxDefinition
 } from 'blockly/core/utils/toolbox';
 import { BlockDefinition } from 'blockly/core/blocks';
-import { Input } from './utils';
+import { empty } from './utils';
+//import { Input } from './utils';
 //import { BlocklyEditor } from './widget';
 //import { BlocklyButton } from './toolbar';
 
@@ -29,7 +30,7 @@ export class BlocklyRegistry implements IBlocklyRegistry {
       contents: Input1.contents.concat(Input2.contents)
     });**/
 
-    this._toolboxes.set('default', Input);
+    this._toolboxes.set('default', empty);
     this._generators.set('python', pythonGenerator);
     this._generators.set('javascript', javascriptGenerator);
     this._generators.set('lua', luaGenerator);
@@ -73,26 +74,6 @@ export class BlocklyRegistry implements IBlocklyRegistry {
    */
   registerBlocks(blocks: BlockDefinition[]): void {
     Blockly.defineBlocksWithJsonArray(blocks);
-    Blockly.common.defineBlocksWithJsonArray([
-      {
-        type: 'list_range',
-        message0: 'create list of numbers from %1 up to %2',
-        args0: [
-          {
-            type: 'field_number',
-            name: 'FIRST',
-            value: 0
-          },
-          {
-            type: 'field_number',
-            name: 'LAST',
-            value: 5
-          }
-        ],
-        output: 'Array',
-        style: 'list_blocks'
-      }
-    ]);
   }
 
   /**

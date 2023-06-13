@@ -1,4 +1,5 @@
 import * as Blockly from 'blockly';
+import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 //import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 //import { see } from './registry';
 
@@ -421,6 +422,10 @@ export const Input = {
       custom: 'VARIABLE'
     }
   ]
+};
+export const empty: ToolboxDefinition = {
+  kind: 'categoryToolbox',
+  contents: []
 };
 /**export const testeet = new Promise<ToolboxDefinition>(resolve => {
   let userInput: ToolboxDefinition | null = null;
