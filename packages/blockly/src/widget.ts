@@ -48,7 +48,7 @@ let customUserToolbox = {
   kind: 'categoryToolbox',
   contents: []
 };
-export function addBlock(parsedContents: any, toolname: any): any {
+export function addBlock(parsedContents: any, toolname: any, color: any): any {
   Blockly.defineBlocksWithJsonArray([parsedContents]);
   console.log('blockDefinition', parsedContents);
 
@@ -59,6 +59,7 @@ export function addBlock(parsedContents: any, toolname: any): any {
         kind: 'category',
         name: toolname,
         //categorystyle: 'list_category',
+        colour: color,
         contents: [
           {
             kind: 'block',
@@ -130,6 +131,24 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
           dialog.appendChild(jsonName);
 
+          const colorLabel = document.createElement('label');
+          colorLabel.innerText =
+            'Choose the desired color of the block toolbox:';
+          colorLabel.style.color = 'white';
+          colorLabel.setAttribute('for', 'colorInput');
+
+          const colorInput = document.createElement('input');
+          colorInput.id = 'colorInput';
+          colorInput.type = 'color';
+          colorInput.style.width = '95%';
+          colorInput.style.height = '20px';
+          colorInput.style.borderRadius = '10px';
+          colorInput.style.padding = '10px';
+          colorInput.style.resize = 'none';
+
+          dialog.appendChild(colorLabel);
+          dialog.appendChild(colorInput);
+
           const submitButton = document.createElement('button');
           submitButton.textContent = 'Upload JSON File';
           submitButton.style.backgroundColor = '#4CAF50';
@@ -163,7 +182,11 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                     const blockName = jsonName.value;
                     console.log('blockname', blockName);
 
-                    customUserToolbox = addBlock(parsedContents, blockName);
+                    customUserToolbox = addBlock(
+                      parsedContents,
+                      blockName,
+                      colorInput.value
+                    );
 
                     options.manager.registerToolbox(
                       'default',
