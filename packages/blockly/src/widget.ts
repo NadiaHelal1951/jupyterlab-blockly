@@ -26,10 +26,6 @@ import {
 } from 'blockly/core/utils/toolbox';
 import { defaultToolbox } from './utils';
 
-//import notebookTracker from 'jupyterlab-blockly-extension'
-//import { BlocklyRegistry } from './registry';
-//import tracenotebook from 'jupyterlab-blockly-extension'
-
 /**
  * DocumentWidget: widget that represents the view or editor for a file type.
  */
@@ -48,8 +44,13 @@ let customUserToolbox = {
   kind: 'categoryToolbox',
   contents: []
 };
-export function addBlock(parsedContents: any, toolname: any, color: any): any {
-  Blockly.defineBlocksWithJsonArray([parsedContents]);
+export function addBlock(
+  parsedContents: any,
+  parsedContentstype: any,
+  toolname: any,
+  color: any
+): any {
+  Blockly.defineBlocksWithJsonArray(parsedContents);
   console.log('blockDefinition', parsedContents);
 
   const block = {
@@ -58,12 +59,11 @@ export function addBlock(parsedContents: any, toolname: any, color: any): any {
       {
         kind: 'category',
         name: toolname,
-        //categorystyle: 'list_category',
         colour: color,
         contents: [
           {
             kind: 'block',
-            type: toolname
+            type: parsedContentstype
           }
         ]
       }
@@ -181,12 +181,17 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
                     const blockName = jsonName.value;
                     console.log('blockname', blockName);
-
-                    customUserToolbox = addBlock(
-                      parsedContents,
-                      blockName,
-                      colorInput.value
-                    );
+                    //console.log('type of block', parsedContents.type._1)
+                    for (const block of parsedContents) {
+                      const blockType = block.type;
+                      customUserToolbox = addBlock(
+                        parsedContents,
+                        blockType,
+                        blockName,
+                        colorInput.value
+                      );
+                      console.log('blockType', blockType);
+                    }
 
                     options.manager.registerToolbox(
                       'default',
