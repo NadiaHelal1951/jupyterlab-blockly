@@ -24,24 +24,55 @@ import {
   FlyoutDefinition,
   ToolboxDefinition
 } from 'blockly/core/utils/toolbox';
-import { defaultToolbox } from './utils';
+import { defaultToolbox, emptyToolbox } from './utils';
 
 /**
  * DocumentWidget: widget that represents the view or editor for a file type.
  */
-
-let customUserToolbox = {
+let customToolbox: any = {
   kind: 'categoryToolbox',
-  contents: [
-    {
-      kind: 'category',
-      name: '',
-      colour: '',
-      contents: []
-    }
-  ]
+  contents: []
 };
-export function addBlock(parsedContents: any, parsedContentstype: any): any {
+
+export function createToolbox(event, jsonName, colorInput): any {
+  const customUserToolbox = {
+    kind: 'categoryToolbox',
+    contents: [
+      {
+        kind: 'category',
+        name: '',
+        colour: '',
+        contents: []
+      }
+    ]
+  };
+
+  const fileContents = event.target.result as string;
+  console.log('filecontents', fileContents);
+
+  const parsedContents = JSON.parse(fileContents);
+  console.log('fileContents', parsedContents);
+
+  const blockName = jsonName.value;
+  console.log('blockname', blockName);
+  //console.log('type of block', parsedContents.type._1)
+  Blockly.defineBlocksWithJsonArray(parsedContents);
+  customUserToolbox.contents[0].name = blockName;
+  customUserToolbox.contents[0].colour = colorInput.value;
+  for (const block of parsedContents) {
+    const blockType = block.type;
+    addBlock(parsedContents, blockType, customUserToolbox);
+    console.log('blockType', blockType);
+  }
+
+  return customUserToolbox;
+}
+
+export function addBlock(
+  parsedContents: any,
+  parsedContentstype: any,
+  customUserToolbox
+): any {
   console.log('blockDefinition', parsedContents);
 
   const block = {
@@ -52,9 +83,9 @@ export function addBlock(parsedContents: any, parsedContentstype: any): any {
 
   // Optionally, you can log the updated customUserToolbox for verification
   console.log('Updated customUserToolbox:', customUserToolbox);
-
   return customUserToolbox;
 }
+
 export let s: string;
 export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   constructor(options: BlocklyEditor.IOptions) {
@@ -151,29 +182,13 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
                 reader.onload = event => {
                   try {
-                    const fileContents = event.target.result as string;
-                    console.log('filecontents', fileContents);
-
-                    const parsedContents = JSON.parse(fileContents);
-                    console.log('fileContents', parsedContents);
-
-                    const blockName = jsonName.value;
-                    console.log('blockname', blockName);
-                    //console.log('type of block', parsedContents.type._1)
-                    Blockly.defineBlocksWithJsonArray(parsedContents);
-                    customUserToolbox.contents[0].name = blockName;
-                    customUserToolbox.contents[0].colour = colorInput.value;
-                    for (const block of parsedContents) {
-                      const blockType = block.type;
-                      customUserToolbox = addBlock(parsedContents, blockType);
-                      console.log('blockType', blockType);
-                    }
-
-                    options.manager.registerToolbox(
-                      'default',
-                      customUserToolbox
-                    );
-                    resolve(customUserToolbox);
+                    const novel = createToolbox(event, jsonName, colorInput);
+                    customToolbox = {
+                      kind: customToolbox.kind,
+                      contents: customToolbox.contents.concat(novel.contents)
+                    };
+                    options.manager.registerToolbox('default', customToolbox);
+                    resolve(customToolbox);
                     dialog.close();
                   } catch (e) {
                     console.error(e);
@@ -221,11 +236,11 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     const clearallButton = new BlocklyButton({
       label: 'Clear Current Toolbox',
       onClick() {
-        customUserToolbox = {
+        customToolbox = {
           kind: 'categoryToolbox',
           contents: []
         };
-        options.manager.registerToolbox('default', customUserToolbox);
+        options.manager.registerToolbox('default', emptyToolbox);
       }
     });
 
