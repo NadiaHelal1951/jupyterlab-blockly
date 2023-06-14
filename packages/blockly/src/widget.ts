@@ -29,51 +29,29 @@ import { defaultToolbox } from './utils';
 /**
  * DocumentWidget: widget that represents the view or editor for a file type.
  */
-export const x = {
-  type: 'controls_repeat_ext',
-  message0: 'repeat %1 times',
-  args0: [{ type: 'input_value', name: 'TIMES', check: 'Number' }],
-  message1: 'do %1',
-  args1: [{ type: 'input_statement', name: 'DO' }],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 120
-};
 
 let customUserToolbox = {
   kind: 'categoryToolbox',
-  contents: []
+  contents: [
+    {
+      kind: 'category',
+      name: '',
+      colour: '',
+      contents: []
+    }
+  ]
 };
-export function addBlock(
-  parsedContents: any,
-  parsedContentstype: any,
-  toolname: any,
-  color: any
-): any {
-  Blockly.defineBlocksWithJsonArray(parsedContents);
+export function addBlock(parsedContents: any, parsedContentstype: any): any {
   console.log('blockDefinition', parsedContents);
 
   const block = {
-    kind: 'categoryToolbox',
-    contents: [
-      {
-        kind: 'category',
-        name: toolname,
-        colour: color,
-        contents: [
-          {
-            kind: 'block',
-            type: parsedContentstype
-          }
-        ]
-      }
-    ]
+    kind: 'block',
+    type: parsedContentstype
   };
+  customUserToolbox.contents[0].contents.push(block);
 
-  customUserToolbox = {
-    kind: customUserToolbox.kind,
-    contents: customUserToolbox.contents.concat(block.contents)
-  };
+  // Optionally, you can log the updated customUserToolbox for verification
+  console.log('Updated customUserToolbox:', customUserToolbox);
 
   return customUserToolbox;
 }
@@ -182,14 +160,12 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                     const blockName = jsonName.value;
                     console.log('blockname', blockName);
                     //console.log('type of block', parsedContents.type._1)
+                    Blockly.defineBlocksWithJsonArray(parsedContents);
+                    customUserToolbox.contents[0].name = blockName;
+                    customUserToolbox.contents[0].colour = colorInput.value;
                     for (const block of parsedContents) {
                       const blockType = block.type;
-                      customUserToolbox = addBlock(
-                        parsedContents,
-                        blockType,
-                        blockName,
-                        colorInput.value
-                      );
+                      customUserToolbox = addBlock(parsedContents, blockType);
                       console.log('blockType', blockType);
                     }
 

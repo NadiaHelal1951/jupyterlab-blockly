@@ -9,7 +9,7 @@ import type {
   ToolboxDefinition
 } from 'blockly/core/utils/toolbox';
 import { BlockDefinition } from 'blockly/core/blocks';
-import { empty } from './utils';
+import { emptyToolbox } from './utils';
 //import { Input } from './utils';
 //import { BlocklyEditor } from './widget';
 //import { BlocklyButton } from './toolbar';
@@ -30,7 +30,7 @@ export class BlocklyRegistry implements IBlocklyRegistry {
       contents: Input1.contents.concat(Input2.contents)
     });**/
 
-    this._toolboxes.set('default', empty);
+    this._toolboxes.set('default', emptyToolbox);
     this._generators.set('python', pythonGenerator);
     this._generators.set('javascript', javascriptGenerator);
     this._generators.set('lua', luaGenerator);

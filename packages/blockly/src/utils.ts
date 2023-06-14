@@ -423,7 +423,7 @@ export const Input = {
     }
   ]
 };
-export const empty: ToolboxDefinition = {
+export const emptyToolbox: ToolboxDefinition = {
   kind: 'categoryToolbox',
   contents: []
 };
