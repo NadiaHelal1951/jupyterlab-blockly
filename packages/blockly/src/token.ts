@@ -2,7 +2,6 @@ import { Token } from '@lumino/coreutils';
 
 import * as Blockly from 'blockly';
 import type { BlockDefinition } from 'blockly/core/blocks';
-import type { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 
 /**
  * The registry token.
@@ -25,7 +24,7 @@ export interface IBlocklyRegistry {
    *
    * @argument toolbox The toolbox to register.
    */
-  registerToolbox(name: string, toobox: ToolboxDefinition): void;
+  registerToolbox(name: string, toobox: any): void;
 
   /**
    * Register block definitions.

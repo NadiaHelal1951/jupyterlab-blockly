@@ -9,8 +9,6 @@ import { notebookIcon } from '@jupyterlab/ui-components';
 import { SplitPanel } from '@lumino/widgets';
 import { Signal } from '@lumino/signaling';
 import Blockly from 'blockly';
-//import type Blockly from 'blockly';
-//import { INotebookTracker } from '@jupyterlab/notebook';
 import { BlocklyLayout } from './layout';
 import { BlocklyManager } from './manager';
 import {
@@ -55,10 +53,12 @@ export function createToolbox(event, jsonName, colorInput): any {
 
   const blockName = jsonName.value;
   console.log('blockname', blockName);
-  //console.log('type of block', parsedContents.type._1)
+
   Blockly.defineBlocksWithJsonArray(parsedContents);
+
   customUserToolbox.contents[0].name = blockName;
   customUserToolbox.contents[0].colour = colorInput.value;
+
   for (const block of parsedContents) {
     const blockType = block.type;
     addBlock(parsedContents, blockType, customUserToolbox);
@@ -87,6 +87,7 @@ export function addBlock(
 }
 
 export let s: string;
+
 export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   constructor(options: BlocklyEditor.IOptions) {
     super(options);

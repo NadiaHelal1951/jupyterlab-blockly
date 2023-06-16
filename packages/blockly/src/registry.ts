@@ -10,9 +10,6 @@ import type {
 } from 'blockly/core/utils/toolbox';
 import { BlockDefinition } from 'blockly/core/blocks';
 import { emptyToolbox } from './utils';
-//import { Input } from './utils';
-//import { BlocklyEditor } from './widget';
-//import { BlocklyButton } from './toolbar';
 
 /**
  * BlocklyRegistry is the class that JupyterLab-Blockly exposes
@@ -25,11 +22,6 @@ export class BlocklyRegistry implements IBlocklyRegistry {
   private _toolboxes = new Map<string, ToolboxDefinition | FlyoutDefinition>();
 
   constructor() {
-    /**this._toolboxes.set('default', {
-      kind: Input1.kind,
-      contents: Input1.contents.concat(Input2.contents)
-    });**/
-
     this._toolboxes.set('default', emptyToolbox);
     this._generators.set('python', pythonGenerator);
     this._generators.set('javascript', javascriptGenerator);
