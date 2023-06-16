@@ -14,10 +14,8 @@ import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { IKernelMenu, IMainMenu } from '@jupyterlab/mainmenu';
 import { INotebookTracker } from '@jupyterlab/notebook';
-//import { tracenotebook } from './notebook';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
-//import { notebookTracker } from 'jupyterlab-blockly';
-//import {s} from 'jupyterlab-blockly'
+
 import {
   WidgetRenderer,
   registerWidgetManager
@@ -28,9 +26,6 @@ import { IBlocklyRegistry } from 'jupyterlab-blockly';
 import { BlocklyEditor } from 'jupyterlab-blockly';
 import { tracenotebook } from './notebook';
 import { blockly_icon } from './icons';
-//import { Options } from 'blockly';
-//import { BlocklyButton } from 'jupyterlab-blockly/src/toolbar';
-//import { Options } from 'blockly';
 
 /**
  * The name of the factory that creates the editor widgets.

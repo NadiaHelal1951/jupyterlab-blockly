@@ -32,7 +32,7 @@ let customToolbox: any = {
   contents: []
 };
 
-export function createToolbox(event, jsonName, colorInput): any {
+export function createToolbox(fileContents, jsonName, colorInput): any {
   const customUserToolbox = {
     kind: 'categoryToolbox',
     contents: [
@@ -45,8 +45,7 @@ export function createToolbox(event, jsonName, colorInput): any {
     ]
   };
 
-  const fileContents = event.target.result as string;
-  console.log('filecontents', fileContents);
+  //console.log('filecontents', fileContents);
 
   const parsedContents = JSON.parse(fileContents);
   console.log('fileContents', parsedContents);
@@ -123,13 +122,19 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
           const title = document.createElement('h1');
           title.textContent =
-            'Please write the "type" of block and insert its JSON file using the Upload button.';
+            "Please write the Name you'd like for your Custom Blocks. Choose a method to insert their JSON data.";
           title.style.fontSize = '20px';
           title.style.marginBottom = '10px';
           title.style.textAlign = 'center';
           title.style.color = 'white';
 
           dialog.appendChild(title);
+
+          const jsonLabel = document.createElement('label');
+          jsonLabel.innerText =
+            "Choose the desired name of the custom blocks' toolbox:";
+          jsonLabel.style.color = 'white';
+          jsonLabel.setAttribute('for', 'jsonName');
 
           const jsonName = document.createElement('textarea');
           jsonName.style.width = '95%';
@@ -139,11 +144,12 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           jsonName.style.padding = '10px';
           jsonName.style.resize = 'none';
 
+          dialog.appendChild(jsonLabel);
           dialog.appendChild(jsonName);
 
           const colorLabel = document.createElement('label');
           colorLabel.innerText =
-            'Choose the desired color of the block toolbox:';
+            "Choose the desired color of the custom blocks' toolbox:";
           colorLabel.style.color = 'white';
           colorLabel.setAttribute('for', 'colorInput');
 
@@ -159,19 +165,24 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           dialog.appendChild(colorLabel);
           dialog.appendChild(colorInput);
 
-          const submitButton = document.createElement('button');
-          submitButton.textContent = 'Upload JSON File';
-          submitButton.style.backgroundColor = '#4CAF50';
-          submitButton.style.borderRadius = '5px';
-          submitButton.style.border = 'none';
-          submitButton.style.color = 'white';
-          submitButton.style.padding = '10px';
-          submitButton.style.cursor = 'pointer';
-          submitButton.style.marginTop = '10px';
+          const uploadButton = document.createElement('button');
+          uploadButton.textContent = 'Upload JSON File';
+          uploadButton.style.backgroundColor = '#4CAF50';
+          uploadButton.style.borderRadius = '5px';
+          uploadButton.style.border = 'none';
+          uploadButton.style.color = 'white';
+          uploadButton.style.padding = '10px';
+          uploadButton.style.cursor = 'pointer';
+          uploadButton.style.marginTop = '10px';
+          uploadButton.style.marginRight = '5px';
 
-          dialog.appendChild(submitButton);
+          dialog.appendChild(uploadButton);
 
-          submitButton.addEventListener('click', () => {
+          /**const spacingElement = document.createElement('div');
+          spacingElement.style.width = '10px'; // Adjust the height for the desired spacing
+          dialog.appendChild(spacingElement);**/
+
+          uploadButton.addEventListener('click', () => {
             try {
               const inputElement = document.createElement('input');
               inputElement.type = 'file';
@@ -183,7 +194,12 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
                 reader.onload = event => {
                   try {
-                    const novel = createToolbox(event, jsonName, colorInput);
+                    const fileContents = event.target.result as string;
+                    const novel = createToolbox(
+                      fileContents,
+                      jsonName,
+                      colorInput
+                    );
                     customToolbox = {
                       kind: customToolbox.kind,
                       contents: customToolbox.contents.concat(novel.contents)
@@ -208,6 +224,103 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
               console.error(e);
               alert('Invalid format, please try again.');
             }
+          });
+
+          const submitButton = document.createElement('button');
+          submitButton.textContent = 'Enter JSON File';
+          submitButton.style.backgroundColor = '#4CAF50';
+          submitButton.style.borderRadius = '5px';
+          submitButton.style.border = 'none';
+          submitButton.style.color = 'white';
+          submitButton.style.padding = '10px';
+          submitButton.style.cursor = 'pointer';
+          submitButton.style.marginTop = '10px';
+
+          dialog.appendChild(submitButton);
+
+          submitButton.addEventListener('click', () => {
+            dialog.close();
+            const dialog2 = document.createElement('dialog');
+            dialog2.style.backgroundColor = '#597ED5';
+            dialog2.style.borderRadius = '10px';
+            dialog2.style.position = 'fixed';
+            dialog2.style.top = '50%';
+            dialog2.style.left = '50%';
+            dialog2.style.transform = 'translate(-50%, -50%)';
+            dialog2.style.padding = '20px';
+            dialog2.style.zIndex = '9999';
+
+            const title2 = document.createElement('h1');
+            title2.textContent = 'Enter Custom Blocks JSON data please.';
+            title2.style.fontSize = '20px';
+            title2.style.marginBottom = '10px';
+            title2.style.textAlign = 'center';
+            title2.style.color = 'white';
+
+            dialog2.appendChild(title2);
+
+            const jsonInput = document.createElement('textarea');
+            jsonInput.placeholder =
+              'Please make sure it follows custom block API\nE.g. [{"type"{..},"message0"{..},..}];';
+            jsonInput.style.width = '95%';
+            jsonInput.style.height = '200px';
+            jsonInput.style.borderRadius = '10px';
+            jsonInput.style.backgroundColor = '#89C5E4';
+            jsonInput.style.padding = '10px';
+            jsonInput.style.resize = 'none';
+
+            dialog2.appendChild(jsonInput);
+
+            const doneButton = document.createElement('button');
+            doneButton.textContent = 'Submit JSON File';
+            doneButton.style.backgroundColor = '#4CAF50';
+            doneButton.style.borderRadius = '5px';
+            doneButton.style.border = 'none';
+            doneButton.style.color = 'white';
+            doneButton.style.padding = '10px';
+            doneButton.style.cursor = 'pointer';
+            doneButton.style.marginTop = '10px';
+
+            dialog2.appendChild(doneButton);
+
+            doneButton.addEventListener('click', () => {
+              try {
+                const fileContents = jsonInput.value as string;
+                const novel = createToolbox(fileContents, jsonName, colorInput);
+                customToolbox = {
+                  kind: customToolbox.kind,
+                  contents: customToolbox.contents.concat(novel.contents)
+                };
+                options.manager.registerToolbox('default', customToolbox);
+                dialog2.close();
+                //dialog.close();
+                resolve(fileContents);
+              } catch (e) {
+                console.error(e);
+                alert('Invalid format, please try again.');
+              }
+            });
+
+            const localCancelButton = document.createElement('button');
+            localCancelButton.textContent = 'Cancel';
+            localCancelButton.style.backgroundColor = '#DF4D4D';
+            localCancelButton.style.borderRadius = '5px';
+            localCancelButton.style.border = 'none';
+            localCancelButton.style.color = 'white';
+            localCancelButton.style.padding = '10px';
+            localCancelButton.style.cursor = 'pointer';
+            localCancelButton.style.marginLeft = '5px';
+            localCancelButton.style.marginTop = '10px';
+
+            dialog2.appendChild(localCancelButton);
+
+            localCancelButton.addEventListener('click', () => {
+              dialog2.close();
+              resolve('');
+            });
+
+            document.body.appendChild(dialog2);
+            dialog2.showModal();
           });
 
           const cancelButton = document.createElement('button');
@@ -259,8 +372,6 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           dialog.style.transform = 'translate(-50%, -50%)';
           dialog.style.padding = '20px';
           dialog.style.zIndex = '9999';
-          dialog.style.width = '30%';
-          dialog.style.height = '30%';
 
           const title = document.createElement('h1');
           title.textContent =
@@ -272,8 +383,21 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
           dialog.appendChild(title);
 
+          const uploadButton = document.createElement('button');
+          uploadButton.textContent = 'Upload JSON File';
+          uploadButton.style.backgroundColor = '#4CAF50';
+          uploadButton.style.borderRadius = '5px';
+          uploadButton.style.border = 'none';
+          uploadButton.style.color = 'white';
+          uploadButton.style.padding = '10px';
+          uploadButton.style.cursor = 'pointer';
+          uploadButton.style.marginTop = '10px';
+          uploadButton.style.marginRight = '5px';
+
+          dialog.appendChild(uploadButton);
+
           const submitButton = document.createElement('button');
-          submitButton.textContent = 'Upload JSON File';
+          submitButton.textContent = 'Enter JSON File';
           submitButton.style.backgroundColor = '#4CAF50';
           submitButton.style.borderRadius = '5px';
           submitButton.style.border = 'none';
@@ -310,7 +434,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
           dialog.appendChild(cancelButton);
 
-          submitButton.addEventListener('click', () => {
+          uploadButton.addEventListener('click', () => {
             try {
               const inputElement = document.createElement('input');
               inputElement.type = 'file';
@@ -344,6 +468,86 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
               console.error(e);
               alert('Invalid format, please try again.');
             }
+          });
+
+          submitButton.addEventListener('click', () => {
+            dialog.close();
+            const dialog2 = document.createElement('dialog');
+            dialog2.style.backgroundColor = '#597ED5';
+            dialog2.style.borderRadius = '10px';
+            dialog2.style.position = 'fixed';
+            dialog2.style.top = '50%';
+            dialog2.style.left = '50%';
+            dialog2.style.transform = 'translate(-50%, -50%)';
+            dialog2.style.padding = '20px';
+            dialog2.style.zIndex = '9999';
+
+            const title2 = document.createElement('h1');
+            title2.textContent = 'Enter Toolbox JSON data please.';
+            title2.style.fontSize = '20px';
+            title2.style.marginBottom = '10px';
+            title2.style.textAlign = 'center';
+            title2.style.color = 'white';
+
+            dialog2.appendChild(title2);
+
+            const jsonInput = document.createElement('textarea');
+            jsonInput.placeholder =
+              'Please make sure it follows toolbox API\nE.g.{"kind"{..}"contents"[{..}]};';
+            jsonInput.style.width = '95%';
+            jsonInput.style.height = '200px';
+            jsonInput.style.borderRadius = '10px';
+            jsonInput.style.backgroundColor = '#89C5E4';
+            jsonInput.style.padding = '10px';
+            jsonInput.style.resize = 'none';
+
+            dialog2.appendChild(jsonInput);
+
+            const doneButton = document.createElement('button');
+            doneButton.textContent = 'Submit JSON File';
+            doneButton.style.backgroundColor = '#4CAF50';
+            doneButton.style.borderRadius = '5px';
+            doneButton.style.border = 'none';
+            doneButton.style.color = 'white';
+            doneButton.style.padding = '10px';
+            doneButton.style.cursor = 'pointer';
+            doneButton.style.marginTop = '10px';
+
+            dialog2.appendChild(doneButton);
+
+            doneButton.addEventListener('click', () => {
+              try {
+                const inputString = jsonInput.value;
+                userInput = eval(`(${inputString})`);
+                options.manager.registerToolbox('default', userInput);
+                dialog2.close();
+                resolve(userInput);
+              } catch (e) {
+                console.error(e);
+                alert('Invalid format, please try again.');
+              }
+            });
+
+            const localCancelButton = document.createElement('button');
+            localCancelButton.textContent = 'Cancel';
+            localCancelButton.style.backgroundColor = '#DF4D4D';
+            localCancelButton.style.borderRadius = '5px';
+            localCancelButton.style.border = 'none';
+            localCancelButton.style.color = 'white';
+            localCancelButton.style.padding = '10px';
+            localCancelButton.style.cursor = 'pointer';
+            localCancelButton.style.marginLeft = '5px';
+            localCancelButton.style.marginTop = '10px';
+
+            dialog2.appendChild(localCancelButton);
+
+            localCancelButton.addEventListener('click', () => {
+              dialog2.close();
+              resolve('');
+            });
+
+            document.body.appendChild(dialog2);
+            dialog2.showModal();
           });
 
           defaultButton.addEventListener('click', () => {
