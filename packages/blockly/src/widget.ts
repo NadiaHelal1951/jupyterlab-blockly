@@ -361,8 +361,8 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     const insertbutton = new BlocklyButton({
       label: 'Insert Toolbox',
       onClick() {
-        new Promise<ToolboxDefinition | FlyoutDefinition>(resolve => {
-          let userInput: ToolboxDefinition | null | FlyoutDefinition = null;
+        new Promise<any>(resolve => {
+          let userInput: ToolboxDefinition | any | FlyoutDefinition = null;
           const dialog = document.createElement('dialog');
           dialog.style.backgroundColor = '#597ED5';
           dialog.style.borderRadius = '10px';
@@ -447,9 +447,28 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                 reader.onload = event => {
                   try {
                     const fileContents = event.target.result as string;
-                    const userInput = eval(`(${fileContents})`);
-                    options.manager.registerToolbox('default', userInput);
-                    resolve(userInput);
+                    const userInput = JSON.parse(fileContents);
+                    console.log('filecontents', userInput.contents);
+                    if (userInput.kind === 'flyoutToolbox') {
+                      const newtoolbox = {
+                        kind: 'categoryToolbox',
+                        contents: [
+                          {
+                            kind: 'category',
+                            name: 'FlyoutToolbox',
+                            colour: 'black',
+                            contents: userInput.contents
+                          }
+                        ]
+                      };
+                      console.log('newtoolbox', newtoolbox);
+                      options.manager.registerToolbox('default', newtoolbox);
+                      resolve(newtoolbox);
+                    } else {
+                      options.manager.registerToolbox('default', userInput);
+                      resolve(userInput);
+                    }
+
                     dialog.close();
                   } catch (e) {
                     console.error(e);
@@ -518,10 +537,29 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
             doneButton.addEventListener('click', () => {
               try {
                 const inputString = jsonInput.value;
-                userInput = eval(`(${inputString})`);
-                options.manager.registerToolbox('default', userInput);
+                const userInput = JSON.parse(inputString);
+                console.log('filecontents', userInput.contents);
+                if (userInput.kind === 'flyoutToolbox') {
+                  const newtoolbox = {
+                    kind: 'categoryToolbox',
+                    contents: [
+                      {
+                        kind: 'category',
+                        name: 'FlyoutToolbox',
+                        colour: 'black',
+                        contents: userInput.contents
+                      }
+                    ]
+                  };
+                  console.log('newtoolbox', newtoolbox);
+                  options.manager.registerToolbox('default', newtoolbox);
+                  resolve(newtoolbox);
+                } else {
+                  options.manager.registerToolbox('default', userInput);
+                  resolve(userInput);
+                }
+
                 dialog2.close();
-                resolve(userInput);
               } catch (e) {
                 console.error(e);
                 alert('Invalid format, please try again.');
