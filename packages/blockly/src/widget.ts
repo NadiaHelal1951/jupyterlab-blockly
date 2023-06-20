@@ -27,63 +27,6 @@ import { defaultToolbox, emptyToolbox } from './utils';
 /**
  * DocumentWidget: widget that represents the view or editor for a file type.
  */
-let customToolbox: any = {
-  kind: 'categoryToolbox',
-  contents: []
-};
-
-export function createToolbox(fileContents, jsonName, colorInput): any {
-  const customUserToolbox = {
-    kind: 'categoryToolbox',
-    contents: [
-      {
-        kind: 'category',
-        name: '',
-        colour: '',
-        contents: []
-      }
-    ]
-  };
-
-  //console.log('filecontents', fileContents);
-
-  const parsedContents = JSON.parse(fileContents);
-  console.log('fileContents', parsedContents);
-
-  const blockName = jsonName.value;
-  console.log('blockname', blockName);
-
-  Blockly.defineBlocksWithJsonArray(parsedContents);
-
-  customUserToolbox.contents[0].name = blockName;
-  customUserToolbox.contents[0].colour = colorInput.value;
-
-  for (const block of parsedContents) {
-    const blockType = block.type;
-    addBlock(parsedContents, blockType, customUserToolbox);
-    console.log('blockType', blockType);
-  }
-
-  return customUserToolbox;
-}
-
-export function addBlock(
-  parsedContents: any,
-  parsedContentstype: any,
-  customUserToolbox
-): any {
-  console.log('blockDefinition', parsedContents);
-
-  const block = {
-    kind: 'block',
-    type: parsedContentstype
-  };
-  customUserToolbox.contents[0].contents.push(block);
-
-  // Optionally, you can log the updated customUserToolbox for verification
-  console.log('Updated customUserToolbox:', customUserToolbox);
-  return customUserToolbox;
-}
 
 export let s: string;
 
@@ -107,7 +50,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     });
 
     const customizebutton = new BlocklyButton({
-      label: 'Customize Blocks',
+      label: 'Customize Toolbox',
       onClick() {
         new Promise<ToolboxDefinition | FlyoutDefinition>(resolve => {
           const dialog = document.createElement('dialog');
@@ -122,7 +65,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
           const title = document.createElement('h1');
           title.textContent =
-            "Please write the Name you'd like for your Custom Blocks. Choose a method to insert their JSON data.";
+            "Please insert the xml of the Custom Blocks' Toolbox. Choose a method to insert their JSON data.";
           title.style.fontSize = '20px';
           title.style.marginBottom = '10px';
           title.style.textAlign = 'center';
@@ -131,8 +74,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           dialog.appendChild(title);
 
           const jsonLabel = document.createElement('label');
-          jsonLabel.innerText =
-            "Choose the desired name of the custom blocks' toolbox:";
+          jsonLabel.innerText = 'Insert Toolbox XML:';
           jsonLabel.style.color = 'white';
           jsonLabel.setAttribute('for', 'jsonName');
 
@@ -147,24 +89,6 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           dialog.appendChild(jsonLabel);
           dialog.appendChild(jsonName);
 
-          const colorLabel = document.createElement('label');
-          colorLabel.innerText =
-            "Choose the desired color of the custom blocks' toolbox:";
-          colorLabel.style.color = 'white';
-          colorLabel.setAttribute('for', 'colorInput');
-
-          const colorInput = document.createElement('input');
-          colorInput.id = 'colorInput';
-          colorInput.type = 'color';
-          colorInput.style.width = '95%';
-          colorInput.style.height = '20px';
-          colorInput.style.borderRadius = '10px';
-          colorInput.style.padding = '10px';
-          colorInput.style.resize = 'none';
-
-          dialog.appendChild(colorLabel);
-          dialog.appendChild(colorInput);
-
           const uploadButton = document.createElement('button');
           uploadButton.textContent = 'Upload JSON File';
           uploadButton.style.backgroundColor = '#4CAF50';
@@ -177,10 +101,6 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           uploadButton.style.marginRight = '5px';
 
           dialog.appendChild(uploadButton);
-
-          /**const spacingElement = document.createElement('div');
-          spacingElement.style.width = '10px'; // Adjust the height for the desired spacing
-          dialog.appendChild(spacingElement);**/
 
           uploadButton.addEventListener('click', () => {
             try {
@@ -195,17 +115,41 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                 reader.onload = event => {
                   try {
                     const fileContents = event.target.result as string;
-                    const novel = createToolbox(
-                      fileContents,
-                      jsonName,
-                      colorInput
+                    const xmlString = jsonName.value as string;
+
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = xmlString;
+
+                    const meta = document.createElement('meta');
+                    meta.setAttribute('charset', 'utf-8');
+
+                    const script = document.createElement('script');
+                    script.setAttribute(
+                      'src',
+                      'https://unpkg.com/blockly/blockly.min.js'
                     );
-                    customToolbox = {
-                      kind: customToolbox.kind,
-                      contents: customToolbox.contents.concat(novel.contents)
-                    };
-                    options.manager.registerToolbox('default', customToolbox);
-                    resolve(customToolbox);
+
+                    const div = document.createElement('div');
+                    div.id = 'blocklyDiv';
+                    div.style.height = '480px';
+                    div.style.width = '800px';
+
+                    const toolbox = tempDiv.querySelector('#toolbox');
+
+                    document.head.appendChild(meta);
+                    document.head.appendChild(script);
+                    document.body.appendChild(div);
+
+                    const toolboxXmlString =
+                      new XMLSerializer().serializeToString(toolbox);
+
+                    Blockly.defineBlocksWithJsonArray(JSON.parse(fileContents));
+
+                    options.manager.registerToolbox(
+                      'default',
+                      toolboxXmlString as ToolboxDefinition
+                    );
+                    resolve(toolboxXmlString as ToolboxDefinition);
                     dialog.close();
                   } catch (e) {
                     console.error(e);
@@ -286,15 +230,45 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
             doneButton.addEventListener('click', () => {
               try {
                 const fileContents = jsonInput.value as string;
-                const novel = createToolbox(fileContents, jsonName, colorInput);
-                customToolbox = {
-                  kind: customToolbox.kind,
-                  contents: customToolbox.contents.concat(novel.contents)
-                };
-                options.manager.registerToolbox('default', customToolbox);
+                const xmlString = jsonName.value as string;
+
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = xmlString;
+
+                const meta = document.createElement('meta');
+                meta.setAttribute('charset', 'utf-8');
+
+                const script = document.createElement('script');
+                script.setAttribute(
+                  'src',
+                  'https://unpkg.com/blockly/blockly.min.js'
+                );
+
+                const div = document.createElement('div');
+                div.id = 'blocklyDiv';
+                div.style.height = '480px';
+                div.style.width = '800px';
+
+                const toolbox = tempDiv.querySelector('#toolbox');
+
+                document.head.appendChild(meta);
+                document.head.appendChild(script);
+                document.body.appendChild(div);
+
+                // Append the elements to the document's head or body as needed
+
+                const toolboxXmlString = new XMLSerializer().serializeToString(
+                  toolbox
+                );
+
+                Blockly.defineBlocksWithJsonArray(JSON.parse(fileContents));
+
+                options.manager.registerToolbox(
+                  'default',
+                  toolboxXmlString as ToolboxDefinition
+                );
+                resolve(toolboxXmlString as ToolboxDefinition);
                 dialog2.close();
-                //dialog.close();
-                resolve(fileContents);
               } catch (e) {
                 console.error(e);
                 alert('Invalid format, please try again.');
@@ -350,10 +324,6 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     const clearallButton = new BlocklyButton({
       label: 'Clear Current Toolbox',
       onClick() {
-        customToolbox = {
-          kind: 'categoryToolbox',
-          contents: []
-        };
         options.manager.registerToolbox('default', emptyToolbox);
       }
     });
