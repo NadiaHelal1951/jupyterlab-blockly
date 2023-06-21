@@ -23,6 +23,11 @@ import {
   ToolboxDefinition
 } from 'blockly/core/utils/toolbox';
 import { defaultToolbox, emptyToolbox } from './utils';
+import { javascriptGenerator } from 'blockly/javascript';
+import { pythonGenerator } from 'blockly/python';
+import { luaGenerator } from 'blockly/lua';
+import { phpGenerator } from 'blockly/php';
+import { dartGenerator } from 'blockly/dart';
 
 /**
  * DocumentWidget: widget that represents the view or editor for a file type.
@@ -145,6 +150,86 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
                     Blockly.defineBlocksWithJsonArray(JSON.parse(fileContents));
 
+                    for (const blocks of JSON.parse(fileContents)) {
+                      pythonGenerator[blocks.type] = function (block) {
+                        // Generate code recursively for connected blocks
+                        const childrenCode = block.childBlocks_
+                          .map(childBlock =>
+                            pythonGenerator.blockToCode(childBlock)
+                          )
+                          .join('\n');
+
+                        // Combine the code of the current block and its children
+                        const code = `${block.type}\n${childrenCode}`;
+
+                        return code;
+                      };
+                    }
+
+                    for (const blocks of JSON.parse(fileContents)) {
+                      luaGenerator[blocks.type] = function (block) {
+                        // Generate code recursively for connected blocks
+                        const childrenCode = block.childBlocks_
+                          .map(childBlock =>
+                            luaGenerator.blockToCode(childBlock)
+                          )
+                          .join('\n');
+
+                        // Combine the code of the current block and its children
+                        const code = `${block.type}\n${childrenCode}`;
+
+                        return code;
+                      };
+                    }
+
+                    for (const blocks of JSON.parse(fileContents)) {
+                      javascriptGenerator[blocks.type] = function (block) {
+                        // Generate code recursively for connected blocks
+                        const childrenCode = block.childBlocks_
+                          .map(childBlock =>
+                            javascriptGenerator.blockToCode(childBlock)
+                          )
+                          .join('\n');
+
+                        // Combine the code of the current block and its children
+                        const code = `${block.type}\n${childrenCode}`;
+
+                        return code;
+                      };
+                    }
+
+                    for (const blocks of JSON.parse(fileContents)) {
+                      phpGenerator[blocks.type] = function (block) {
+                        // Generate code recursively for connected blocks
+                        const childrenCode = block.childBlocks_
+                          .map(childBlock =>
+                            phpGenerator.blockToCode(childBlock)
+                          )
+                          .join('\n');
+
+                        // Combine the code of the current block and its children
+                        const code = `${block.type}\n${childrenCode}`;
+
+                        return code;
+                      };
+                    }
+
+                    for (const blocks of JSON.parse(fileContents)) {
+                      dartGenerator[blocks.type] = function (block) {
+                        // Generate code recursively for connected blocks
+                        const childrenCode = block.childBlocks_
+                          .map(childBlock =>
+                            dartGenerator.blockToCode(childBlock)
+                          )
+                          .join('\n');
+
+                        // Combine the code of the current block and its children
+                        const code = `${block.type}\n${childrenCode}`;
+
+                        return code;
+                      };
+                    }
+
                     options.manager.registerToolbox(
                       'default',
                       toolboxXmlString as ToolboxDefinition
@@ -262,6 +347,80 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                 );
 
                 Blockly.defineBlocksWithJsonArray(JSON.parse(fileContents));
+
+                for (const blocks of JSON.parse(fileContents)) {
+                  pythonGenerator[blocks.type] = function (block) {
+                    // Generate code recursively for connected blocks
+                    const childrenCode = block.childBlocks_
+                      .map(childBlock =>
+                        pythonGenerator.blockToCode(childBlock)
+                      )
+                      .join('\n');
+
+                    // Combine the code of the current block and its children
+                    const code = `${block.type}\n${childrenCode}`;
+
+                    return code;
+                  };
+                }
+
+                for (const blocks of JSON.parse(fileContents)) {
+                  luaGenerator[blocks.type] = function (block) {
+                    // Generate code recursively for connected blocks
+                    const childrenCode = block.childBlocks_
+                      .map(childBlock => luaGenerator.blockToCode(childBlock))
+                      .join('\n');
+
+                    // Combine the code of the current block and its children
+                    const code = `${block.type}\n${childrenCode}`;
+
+                    return code;
+                  };
+                }
+
+                for (const blocks of JSON.parse(fileContents)) {
+                  javascriptGenerator[blocks.type] = function (block) {
+                    // Generate code recursively for connected blocks
+                    const childrenCode = block.childBlocks_
+                      .map(childBlock =>
+                        javascriptGenerator.blockToCode(childBlock)
+                      )
+                      .join('\n');
+
+                    // Combine the code of the current block and its children
+                    const code = `${block.type}\n${childrenCode}`;
+
+                    return code;
+                  };
+                }
+
+                for (const blocks of JSON.parse(fileContents)) {
+                  phpGenerator[blocks.type] = function (block) {
+                    // Generate code recursively for connected blocks
+                    const childrenCode = block.childBlocks_
+                      .map(childBlock => phpGenerator.blockToCode(childBlock))
+                      .join('\n');
+
+                    // Combine the code of the current block and its children
+                    const code = `${block.type}\n${childrenCode}`;
+
+                    return code;
+                  };
+                }
+
+                for (const blocks of JSON.parse(fileContents)) {
+                  dartGenerator[blocks.type] = function (block) {
+                    // Generate code recursively for connected blocks
+                    const childrenCode = block.childBlocks_
+                      .map(childBlock => dartGenerator.blockToCode(childBlock))
+                      .join('\n');
+
+                    // Combine the code of the current block and its children
+                    const code = `${block.type}\n${childrenCode}`;
+
+                    return code;
+                  };
+                }
 
                 options.manager.registerToolbox(
                   'default',

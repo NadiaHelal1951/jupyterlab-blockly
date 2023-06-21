@@ -1,23 +1,18 @@
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ISessionContext, showErrorMessage } from '@jupyterlab/apputils';
 import { CodeCell, CodeCellModel } from '@jupyterlab/cells';
-//import { INotebookTracker } from '@jupyterlab/notebook';
 import { Message } from '@lumino/messaging';
 import { SplitLayout, SplitPanel, Widget } from '@lumino/widgets';
 import { IIterator, ArrayIterator } from '@lumino/algorithm';
 import { Signal } from '@lumino/signaling';
-
 import * as Blockly from 'blockly';
-//import { INotebookTracker } from '@jupyterlab/notebook';
-//import plugin from 'jupyterlab-blockly'
 import { BlocklyManager } from './manager';
 import { THEME } from './utils';
-//import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 
 /**
  * A blockly layout to host the Blockly editor.
  */
-//export let notebookTracker: INotebookTracker;
+
 export class BlocklyLayout extends SplitLayout {
   private _host: Widget;
   private _manager: BlocklyManager;
