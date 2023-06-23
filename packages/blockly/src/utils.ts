@@ -359,6 +359,450 @@ export const emptyToolbox: ToolboxDefinition = {
   contents: []
 };
 
+export function customexecute(options: any): ToolboxDefinition {
+  let userInput: ToolboxDefinition | null = null;
+  const dialog2 = document.createElement('dialog');
+  dialog2.style.backgroundColor = '#597ED5';
+  dialog2.style.borderRadius = '10px';
+  dialog2.style.position = 'fixed';
+  dialog2.style.top = '50%';
+  dialog2.style.left = '50%';
+  dialog2.style.transform = 'translate(-50%, -50%)';
+  dialog2.style.padding = '20px';
+  dialog2.style.zIndex = '9999';
+
+  const title2 = document.createElement('h1');
+  title2.textContent = 'Please choose a custom block.';
+  title2.style.fontSize = '20px';
+  title2.style.marginBottom = '10px';
+  title2.style.textAlign = 'center';
+  title2.style.color = 'white';
+
+  const nameLabel = document.createElement('label');
+  nameLabel.innerText = 'Create the name of the toolbox here:';
+  nameLabel.style.color = 'white';
+  nameLabel.setAttribute('for', 'nameInput');
+
+  const nameInput = document.createElement('textarea');
+  nameInput.style.width = '100%';
+  nameInput.style.height = '25px';
+  nameInput.style.borderRadius = '10px';
+  nameInput.style.padding = '5px';
+  nameInput.style.margin = 'auto';
+
+  const colorLabel = document.createElement('label');
+  colorLabel.innerText = 'Choose the desired color of the toolbox:';
+  colorLabel.style.color = 'white';
+  colorLabel.setAttribute('for', 'colorInput');
+
+  const colorInput = document.createElement('input');
+  colorInput.id = 'colorInput';
+  colorInput.type = 'color';
+  colorInput.style.width = '100%';
+  colorInput.style.height = '25px';
+  colorInput.style.borderRadius = '10px';
+  colorInput.style.padding = '5px';
+  colorInput.style.margin = 'auto';
+
+  let customresult = '';
+
+  const choiceLabel = document.createElement('label');
+  choiceLabel.innerText = 'Choose either "Variable" or "Procedure":';
+  choiceLabel.style.color = 'white';
+
+  const variableButton = document.createElement('button');
+  variableButton.textContent = 'Variable';
+  variableButton.style.marginRight = '10px';
+  variableButton.style.width = '100%';
+  variableButton.addEventListener(
+    'click',
+    handleChoiceClick.bind(null, 'variable')
+  );
+
+  const procedureButton = document.createElement('button');
+  procedureButton.textContent = 'Procedure';
+  procedureButton.style.width = '100%';
+  procedureButton.addEventListener(
+    'click',
+    handleChoiceClick.bind(null, 'procedure')
+  );
+
+  function handleChoiceClick(choice: string): void {
+    const selectedButton =
+      choice === 'variable' ? variableButton : procedureButton;
+
+    selectedButton.style.transform = 'translateX(100%)';
+    selectedButton.style.transition = 'transform 0.5s';
+
+    if (choice === 'variable') {
+      customresult = 'VARIABLE';
+    } else {
+      customresult = 'PROCEDURE';
+    }
+  }
+
+  dialog2.appendChild(title2);
+
+  dialog2.appendChild(nameLabel);
+  dialog2.appendChild(nameInput);
+
+  dialog2.appendChild(colorLabel);
+  dialog2.appendChild(colorInput);
+
+  dialog2.appendChild(choiceLabel);
+  dialog2.appendChild(variableButton);
+  dialog2.appendChild(procedureButton);
+
+  const submitButton = document.createElement('button');
+  submitButton.textContent = 'Submit';
+  submitButton.style.backgroundColor = '#4CAF50';
+  submitButton.style.borderRadius = '5px';
+  submitButton.style.border = 'none';
+  submitButton.style.color = 'white';
+  submitButton.style.padding = '10px';
+  submitButton.style.cursor = 'pointer';
+  submitButton.style.marginBottom = '10px';
+
+  document.body.appendChild(dialog2);
+
+  submitButton.addEventListener('click', () => {
+    try {
+      const inputString = {
+        kind: 'categoryToolbox',
+        contents: [
+          {
+            kind: 'CATEGORY',
+            colour: colorInput.value,
+            custom: customresult,
+            name: nameInput.value
+          }
+        ]
+      };
+
+      userInput = inputString;
+      insertedToolbox = {
+        kind: insertedToolbox.kind,
+        contents: insertedToolbox.contents.concat(userInput.contents)
+      };
+      options.manager.registerToolbox('default', insertedToolbox);
+      dialog2.close();
+    } catch (e) {
+      console.error(e);
+      alert('Invalid format, please try again.');
+    }
+  });
+
+  dialog2.appendChild(submitButton);
+
+  const localCancelButton = document.createElement('button');
+  localCancelButton.textContent = 'Cancel';
+  localCancelButton.style.backgroundColor = '#DF4D4D';
+  localCancelButton.style.borderRadius = '5px';
+  localCancelButton.style.border = 'none';
+  localCancelButton.style.color = 'white';
+  localCancelButton.style.padding = '10px';
+  localCancelButton.style.cursor = 'pointer';
+  localCancelButton.style.marginLeft = '5px';
+  localCancelButton.style.marginTop = '10px';
+
+  dialog2.appendChild(localCancelButton);
+
+  localCancelButton.addEventListener('click', () => {
+    dialog2.close();
+  });
+
+  dialog2.showModal();
+
+  return userInput;
+}
+
+export let insertedToolbox: any = {
+  kind: 'categoryToolbox',
+  contents: []
+};
+
+let customUserToolbox = {
+  kind: 'categoryToolbox',
+  contents: []
+};
+
+function addToolbox(
+  name2: string,
+  color: string,
+  type2: string,
+  blockxml2: string
+): any {
+  customUserToolbox = {
+    kind: 'categoryToolbox',
+    contents: [
+      {
+        kind: 'CATEGORY',
+        name: name2,
+        colour: color,
+        contents: [] // Empty array to hold the contents
+      }
+    ]
+  };
+  addBlock(type2, blockxml2, customUserToolbox);
+
+  return customUserToolbox;
+}
+
+function addBlock(type2: string, blockxml2: string, customUserToolbox): any {
+  const block = {
+    kind: 'block',
+    blockxml: blockxml2,
+    type: type2
+  };
+  customUserToolbox.contents[0].contents.push(block); // Push the new block to the contents array
+
+  return customUserToolbox;
+}
+
+function addBlockButton(
+  dialog2,
+  doneButton,
+  addbutton,
+  customButton,
+  localCancelButton,
+  options
+): any {
+  const contentsLabel = document.createElement('label');
+  contentsLabel.innerText = 'Insert block type:';
+  contentsLabel.style.color = 'white';
+  contentsLabel.setAttribute('for', 'contentsInput');
+
+  const contentsInput = document.createElement('textarea');
+  contentsInput.style.width = '95%';
+  contentsInput.style.height = '20px';
+  contentsInput.style.borderRadius = '10px';
+  contentsInput.style.backgroundColor = '#89C5E4';
+  contentsInput.style.padding = '10px';
+  contentsInput.style.resize = 'none';
+
+  const contentsxmlLabel = document.createElement('label');
+  contentsxmlLabel.innerText = 'Insert blockxml (optional):';
+  contentsxmlLabel.style.color = 'white';
+  contentsxmlLabel.setAttribute('for', 'contentsxml');
+
+  const contentsxml = document.createElement('textarea');
+  contentsxml.style.width = '95%';
+  contentsxml.style.height = '20px';
+  contentsxml.style.borderRadius = '10px';
+  contentsxml.style.backgroundColor = '#89C5E4';
+  contentsxml.style.padding = '10px';
+  contentsxml.style.resize = 'none';
+
+  dialog2.appendChild(contentsLabel);
+  dialog2.appendChild(contentsInput);
+  dialog2.appendChild(contentsxmlLabel);
+  dialog2.appendChild(contentsxml);
+  dialog2.appendChild(doneButton);
+  dialog2.appendChild(customButton);
+  dialog2.appendChild(addbutton);
+  dialog2.appendChild(localCancelButton);
+
+  doneButton.addEventListener('click', () => {
+    try {
+      const x = addBlock(
+        contentsInput.value,
+        contentsxml.value,
+        customUserToolbox
+      );
+      console.log('newtoolbox: ', x);
+      insertedToolbox = {
+        kind: insertedToolbox.kind,
+        contents: insertedToolbox.contents.concat(x.contents[0].contents)
+      };
+      console.log('inserted: ', insertedToolbox);
+      options.manager.registerToolbox('default', insertedToolbox);
+      dialog2.close();
+    } catch (e) {
+      console.error(e);
+      alert('Invalid format, please try again.');
+    }
+  });
+}
+
+export function createToolbox(dialog2: any, options: any, resolve: any) {
+  const title2 = document.createElement('h1');
+  title2.textContent = 'Enter Toolbox data please.';
+  title2.style.fontSize = '20px';
+  title2.style.marginBottom = '10px';
+  title2.style.textAlign = 'center';
+  title2.style.color = 'white';
+
+  dialog2.appendChild(title2);
+
+  const nameLabel = document.createElement('label');
+  nameLabel.innerText = 'Insert Toolbox name:';
+  nameLabel.style.color = 'white';
+  nameLabel.setAttribute('for', 'nameInput');
+
+  const nameInput = document.createElement('textarea');
+  nameInput.style.width = '95%';
+  nameInput.style.height = '20px';
+
+  nameInput.style.borderRadius = '10px';
+  nameInput.style.backgroundColor = '#89C5E4';
+  nameInput.style.padding = '10px';
+  nameInput.style.resize = 'none';
+
+  dialog2.appendChild(nameLabel);
+  dialog2.appendChild(nameInput);
+
+  const colorLabel = document.createElement('label');
+  colorLabel.innerText = 'Choose Toolbox color:';
+  colorLabel.style.color = 'white';
+  colorLabel.setAttribute('for', 'colorInput');
+
+  const colorInput = document.createElement('input');
+  colorInput.id = 'colorInput';
+  colorInput.type = 'color';
+  colorInput.style.width = '95%';
+  colorInput.style.height = '20px';
+  colorInput.style.borderRadius = '10px';
+  colorInput.style.padding = '10px';
+  colorInput.style.resize = 'none';
+
+  dialog2.appendChild(colorLabel);
+  dialog2.appendChild(colorInput);
+
+  const contentsLabel = document.createElement('label');
+  contentsLabel.innerText = 'Insert block type:';
+  contentsLabel.style.color = 'white';
+  contentsLabel.setAttribute('for', 'contentsInput');
+
+  const contentsInput = document.createElement('textarea');
+  contentsInput.style.width = '95%';
+  contentsInput.style.height = '20px';
+  contentsInput.style.borderRadius = '10px';
+  contentsInput.style.backgroundColor = '#89C5E4';
+  contentsInput.style.padding = '10px';
+  contentsInput.style.resize = 'none';
+
+  const contentsxmlLabel = document.createElement('label');
+  contentsxmlLabel.innerText = 'Insert blockxml(optional):';
+  contentsxmlLabel.style.color = 'white';
+  contentsxmlLabel.setAttribute('for', 'contentsxml');
+
+  const contentsxml = document.createElement('textarea');
+  contentsxml.style.width = '95%';
+  contentsxml.style.height = '20px';
+  contentsxml.style.borderRadius = '10px';
+  contentsxml.style.backgroundColor = '#89C5E4';
+  contentsxml.style.padding = '10px';
+  contentsxml.style.resize = 'none';
+
+  dialog2.appendChild(contentsLabel);
+  dialog2.appendChild(contentsInput);
+  dialog2.appendChild(contentsxmlLabel);
+  dialog2.appendChild(contentsxml);
+
+  const doneButton = document.createElement('button');
+  doneButton.textContent = 'Submit';
+  doneButton.style.backgroundColor = '#4CAF50';
+  doneButton.style.borderRadius = '5px';
+  doneButton.style.border = 'none';
+  doneButton.style.color = 'white';
+  doneButton.style.padding = '10px';
+  doneButton.style.cursor = 'pointer';
+  doneButton.style.marginTop = '10px';
+  doneButton.style.marginRight = '10px';
+
+  dialog2.appendChild(doneButton);
+
+  const customButton = document.createElement('button');
+  customButton.textContent = 'Custom Block';
+  customButton.style.backgroundColor = '#4CAF50';
+  customButton.style.borderRadius = '5px';
+  customButton.style.border = 'none';
+  customButton.style.color = 'white';
+  customButton.style.padding = '10px';
+  customButton.style.cursor = 'pointer';
+  customButton.style.marginTop = '10px';
+  customButton.style.marginRight = '8px';
+  //customButton.style.marginLeft = 'auto';
+
+  dialog2.appendChild(customButton);
+
+  const addButton = document.createElement('button');
+  addButton.textContent = 'Add Block';
+  addButton.style.backgroundColor = '#4CAF50';
+  addButton.style.borderRadius = '5px';
+  addButton.style.border = 'none';
+  addButton.style.color = 'white';
+  addButton.style.padding = '10px';
+  addButton.style.cursor = 'pointer';
+  addButton.style.marginTop = '10px';
+  addButton.style.marginRight = '5px';
+
+  dialog2.appendChild(addButton);
+
+  doneButton.addEventListener('click', () => {
+    try {
+      const newtoolbox = addToolbox(
+        nameInput.value,
+        colorInput.value,
+        contentsInput.value,
+        contentsxml.value
+      );
+      insertedToolbox = {
+        kind: insertedToolbox.kind,
+        contents: insertedToolbox.contents.concat(newtoolbox.contents)
+      };
+      options.manager.registerToolbox('default', insertedToolbox);
+      //resolve(newtoolbox);
+      dialog2.close();
+    } catch (e) {
+      console.error(e);
+      alert('Invalid format, please try again.');
+    }
+  });
+
+  addButton.addEventListener('click', () => {
+    dialog2.removeChild(doneButton);
+    dialog2.removeChild(addButton);
+    dialog2.removeChild(customButton);
+    dialog2.removeChild(localCancelButton);
+    const newtoolbox = addBlockButton(
+      dialog2,
+      doneButton,
+      addButton,
+      customButton,
+      localCancelButton,
+      options
+    );
+
+    //options.manager.registerToolbox('default', insertedToolbox);
+    resolve(newtoolbox);
+  });
+
+  customButton.addEventListener('click', () => {
+    dialog2.close();
+    const userInput2 = customexecute(options);
+    resolve(userInput2);
+  });
+
+  const localCancelButton = document.createElement('button');
+  localCancelButton.textContent = 'Cancel';
+  localCancelButton.style.backgroundColor = '#DF4D4D';
+  localCancelButton.style.borderRadius = '5px';
+  localCancelButton.style.border = 'none';
+  localCancelButton.style.color = 'white';
+  localCancelButton.style.padding = '10px';
+  localCancelButton.style.cursor = 'pointer';
+  localCancelButton.style.marginLeft = '5px';
+  localCancelButton.style.marginTop = '10px';
+
+  dialog2.appendChild(localCancelButton);
+
+  localCancelButton.addEventListener('click', () => {
+    dialog2.close();
+    resolve('');
+  });
+}
+
 // Defining a Blockly Theme in accordance with the current JupyterLab Theme.
 const jupyterlab_theme = Blockly.Theme.defineTheme('jupyterlab', {
   name: 'JupyterLab Blockly',
