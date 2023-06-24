@@ -26,7 +26,8 @@ import {
   createToolbox,
   defaultToolbox,
   emptyToolbox,
-  insertedToolbox
+  insertedToolbox,
+  createcustomblocksToolbox
 } from './utils';
 import { javascriptGenerator } from 'blockly/javascript';
 import { pythonGenerator } from 'blockly/python';
@@ -165,7 +166,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                           .join('\n');
 
                         // Combine the code of the current block and its children
-                        const code = `${block.type}\n${childrenCode}`;
+                        const code = `print('${block.type}')\n${childrenCode}`;
 
                         return code;
                       };
@@ -181,7 +182,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                           .join('\n');
 
                         // Combine the code of the current block and its children
-                        const code = `${block.type}\n${childrenCode}`;
+                        const code = `print("${block.type}")\n${childrenCode}`;
 
                         return code;
                       };
@@ -197,7 +198,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                           .join('\n');
 
                         // Combine the code of the current block and its children
-                        const code = `${block.type}\n${childrenCode}`;
+                        const code = `console.log('${block.type}');\n${childrenCode}`;
 
                         return code;
                       };
@@ -213,7 +214,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                           .join('\n');
 
                         // Combine the code of the current block and its children
-                        const code = `${block.type}\n${childrenCode}`;
+                        const code = `echo '${block.type}';\n${childrenCode}`;
 
                         return code;
                       };
@@ -229,7 +230,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                           .join('\n');
 
                         // Combine the code of the current block and its children
-                        const code = `${block.type}\n${childrenCode}`;
+                        const code = `print('${block.type}');\n${childrenCode}`;
 
                         return code;
                       };
@@ -261,7 +262,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           });
 
           const submitButton = document.createElement('button');
-          submitButton.textContent = 'Enter JSON File';
+          submitButton.textContent = 'Enter Blocks';
           submitButton.style.backgroundColor = '#4CAF50';
           submitButton.style.borderRadius = '5px';
           submitButton.style.border = 'none';
@@ -278,184 +279,21 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
             dialog2.style.backgroundColor = '#597ED5';
             dialog2.style.borderRadius = '10px';
             dialog2.style.position = 'fixed';
-            dialog2.style.top = '50%';
+            dialog2.style.top = '10%'; // Adjust the top position as needed
             dialog2.style.left = '50%';
-            dialog2.style.transform = 'translate(-50%, -50%)';
+            dialog2.style.transform = 'translateX(-50%)';
             dialog2.style.padding = '20px';
             dialog2.style.zIndex = '9999';
 
-            const title2 = document.createElement('h1');
-            title2.textContent = 'Enter Custom Blocks JSON data please.';
-            title2.style.fontSize = '20px';
-            title2.style.marginBottom = '10px';
-            title2.style.textAlign = 'center';
-            title2.style.color = 'white';
+            // Set the width and height to fit most of the screen
+            dialog2.style.width = '80%';
+            dialog2.style.height = '80%';
 
-            dialog2.appendChild(title2);
+            // Add any other content or modifications to the dialog element
 
-            const jsonInput = document.createElement('textarea');
-            jsonInput.placeholder =
-              'Please make sure it follows custom block API\nE.g. [{"type"{..},"message0"{..},..}];';
-            jsonInput.style.width = '95%';
-            jsonInput.style.height = '200px';
-            jsonInput.style.borderRadius = '10px';
-            jsonInput.style.backgroundColor = '#89C5E4';
-            jsonInput.style.padding = '10px';
-            jsonInput.style.resize = 'none';
+            // Append the dialog element to the document body
 
-            dialog2.appendChild(jsonInput);
-
-            const doneButton = document.createElement('button');
-            doneButton.textContent = 'Submit JSON File';
-            doneButton.style.backgroundColor = '#4CAF50';
-            doneButton.style.borderRadius = '5px';
-            doneButton.style.border = 'none';
-            doneButton.style.color = 'white';
-            doneButton.style.padding = '10px';
-            doneButton.style.cursor = 'pointer';
-            doneButton.style.marginTop = '10px';
-
-            dialog2.appendChild(doneButton);
-
-            doneButton.addEventListener('click', () => {
-              try {
-                const fileContents = jsonInput.value as string;
-                const xmlString = jsonName.value as string;
-
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = xmlString;
-
-                const meta = document.createElement('meta');
-                meta.setAttribute('charset', 'utf-8');
-
-                const script = document.createElement('script');
-                script.setAttribute(
-                  'src',
-                  'https://unpkg.com/blockly/blockly.min.js'
-                );
-
-                const div = document.createElement('div');
-                div.id = 'blocklyDiv';
-                div.style.height = '480px';
-                div.style.width = '800px';
-
-                const toolbox = tempDiv.querySelector('#toolbox');
-
-                document.head.appendChild(meta);
-                document.head.appendChild(script);
-                document.body.appendChild(div);
-
-                // Append the elements to the document's head or body as needed
-
-                const toolboxXmlString = new XMLSerializer().serializeToString(
-                  toolbox
-                );
-
-                Blockly.defineBlocksWithJsonArray(JSON.parse(fileContents));
-
-                for (const blocks of JSON.parse(fileContents)) {
-                  pythonGenerator[blocks.type] = function (block) {
-                    // Generate code recursively for connected blocks
-                    const childrenCode = block.childBlocks_
-                      .map(childBlock =>
-                        pythonGenerator.blockToCode(childBlock)
-                      )
-                      .join('\n');
-
-                    // Combine the code of the current block and its children
-                    const code = `${block.type}\n${childrenCode}`;
-
-                    return code;
-                  };
-                }
-
-                for (const blocks of JSON.parse(fileContents)) {
-                  luaGenerator[blocks.type] = function (block) {
-                    // Generate code recursively for connected blocks
-                    const childrenCode = block.childBlocks_
-                      .map(childBlock => luaGenerator.blockToCode(childBlock))
-                      .join('\n');
-
-                    // Combine the code of the current block and its children
-                    const code = `${block.type}\n${childrenCode}`;
-
-                    return code;
-                  };
-                }
-
-                for (const blocks of JSON.parse(fileContents)) {
-                  javascriptGenerator[blocks.type] = function (block) {
-                    // Generate code recursively for connected blocks
-                    const childrenCode = block.childBlocks_
-                      .map(childBlock =>
-                        javascriptGenerator.blockToCode(childBlock)
-                      )
-                      .join('\n');
-
-                    // Combine the code of the current block and its children
-                    const code = `${block.type}\n${childrenCode}`;
-
-                    return code;
-                  };
-                }
-
-                for (const blocks of JSON.parse(fileContents)) {
-                  phpGenerator[blocks.type] = function (block) {
-                    // Generate code recursively for connected blocks
-                    const childrenCode = block.childBlocks_
-                      .map(childBlock => phpGenerator.blockToCode(childBlock))
-                      .join('\n');
-
-                    // Combine the code of the current block and its children
-                    const code = `${block.type}\n${childrenCode}`;
-
-                    return code;
-                  };
-                }
-
-                for (const blocks of JSON.parse(fileContents)) {
-                  dartGenerator[blocks.type] = function (block) {
-                    // Generate code recursively for connected blocks
-                    const childrenCode = block.childBlocks_
-                      .map(childBlock => dartGenerator.blockToCode(childBlock))
-                      .join('\n');
-
-                    // Combine the code of the current block and its children
-                    const code = `${block.type}\n${childrenCode}`;
-
-                    return code;
-                  };
-                }
-
-                options.manager.registerToolbox(
-                  'default',
-                  toolboxXmlString as ToolboxDefinition
-                );
-                resolve(toolboxXmlString as ToolboxDefinition);
-                dialog2.close();
-              } catch (e) {
-                console.error(e);
-                alert('Invalid format, please try again.');
-              }
-            });
-
-            const localCancelButton = document.createElement('button');
-            localCancelButton.textContent = 'Cancel';
-            localCancelButton.style.backgroundColor = '#DF4D4D';
-            localCancelButton.style.borderRadius = '5px';
-            localCancelButton.style.border = 'none';
-            localCancelButton.style.color = 'white';
-            localCancelButton.style.padding = '10px';
-            localCancelButton.style.cursor = 'pointer';
-            localCancelButton.style.marginLeft = '5px';
-            localCancelButton.style.marginTop = '10px';
-
-            dialog2.appendChild(localCancelButton);
-
-            localCancelButton.addEventListener('click', () => {
-              dialog2.close();
-              resolve('');
-            });
+            createcustomblocksToolbox(dialog2, options, resolve, jsonName);
 
             document.body.appendChild(dialog2);
             dialog2.showModal();
@@ -630,11 +468,15 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
             dialog2.style.backgroundColor = '#597ED5';
             dialog2.style.borderRadius = '10px';
             dialog2.style.position = 'fixed';
-            dialog2.style.top = '50%';
+            dialog2.style.top = '10%'; // Adjust the top position as needed
             dialog2.style.left = '50%';
-            dialog2.style.transform = 'translate(-50%, -50%)';
+            dialog2.style.transform = 'translateX(-50%)';
             dialog2.style.padding = '20px';
             dialog2.style.zIndex = '9999';
+
+            // Set the width and height to fit most of the screen
+            dialog2.style.width = '60%';
+            dialog2.style.height = '60%';
 
             /**const title2 = document.createElement('h1');
             title2.textContent = 'Enter Toolbox JSON data please.';
