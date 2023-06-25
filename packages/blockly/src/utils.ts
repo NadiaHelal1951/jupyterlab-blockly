@@ -363,6 +363,470 @@ export const emptyToolbox: ToolboxDefinition = {
   kind: 'categoryToolbox',
   contents: []
 };
+
+let globalxml = '';
+
+function addreference(
+  dialog2,
+  addButton,
+  uploadButton,
+  submitButton,
+  cancelButton
+) {
+  const title = document.createElement('h2');
+  title.textContent = 'New block';
+  title.style.marginTop = '10';
+  title.style.textAlign = 'center';
+  title.style.color = 'white';
+
+  dialog2.appendChild(title);
+
+  const categoryLabel = document.createElement('label');
+  categoryLabel.innerText = 'Insert Block category:';
+  categoryLabel.style.color = 'white';
+  categoryLabel.setAttribute('for', 'categoryInput');
+
+  const categoryInput = document.createElement('textarea');
+  categoryInput.style.width = '95%';
+  categoryInput.style.height = '10px';
+  categoryInput.style.borderRadius = '10px';
+  categoryInput.style.backgroundColor = '#89C5E4';
+  categoryInput.style.padding = '10px';
+  categoryInput.style.resize = 'none';
+
+  dialog2.appendChild(categoryLabel);
+  dialog2.appendChild(categoryInput);
+
+  const colorLabel = document.createElement('label');
+  colorLabel.innerText = 'Insert Block color:';
+  colorLabel.style.color = 'white';
+  colorLabel.setAttribute('for', 'colorInput');
+
+  const colorInput = document.createElement('textarea');
+  colorInput.style.width = '95%';
+  colorInput.style.height = '10px';
+  colorInput.style.borderRadius = '10px';
+  colorInput.style.backgroundColor = '#89C5E4';
+  colorInput.style.padding = '10px';
+  colorInput.style.resize = 'none';
+
+  dialog2.appendChild(colorLabel);
+  dialog2.appendChild(colorInput);
+
+  const typeLabel = document.createElement('label');
+  typeLabel.innerText = 'Insert Block type:';
+  typeLabel.style.color = 'white';
+  typeLabel.setAttribute('for', 'typeInput');
+
+  const typeInput = document.createElement('textarea');
+  typeInput.style.width = '95%';
+  typeInput.style.height = '10px';
+  typeInput.style.borderRadius = '10px';
+  typeInput.style.backgroundColor = '#89C5E4';
+  typeInput.style.padding = '10px';
+  typeInput.style.resize = 'none';
+
+  dialog2.appendChild(typeLabel);
+  dialog2.appendChild(typeInput);
+
+  const valueLabel = document.createElement('label');
+  valueLabel.innerText = 'Insert Block value:';
+  valueLabel.style.color = 'white';
+  valueLabel.setAttribute('for', 'valueInput');
+
+  const valueInput = document.createElement('textarea');
+  valueInput.style.width = '95%';
+  valueInput.style.height = '10px';
+  valueInput.style.borderRadius = '10px';
+  valueInput.style.backgroundColor = '#89C5E4';
+  valueInput.style.padding = '10px';
+  valueInput.style.resize = 'none';
+
+  dialog2.appendChild(valueLabel);
+  dialog2.appendChild(valueInput);
+
+  const shadowLabel = document.createElement('label');
+  shadowLabel.innerText = 'Insert Block shadow:';
+  shadowLabel.style.color = 'white';
+  shadowLabel.setAttribute('for', 'shadowInput');
+
+  const shadowInput = document.createElement('textarea');
+  shadowInput.style.width = '95%';
+  shadowInput.style.height = '10px';
+  shadowInput.style.borderRadius = '10px';
+  shadowInput.style.backgroundColor = '#89C5E4';
+  shadowInput.style.padding = '10px';
+  shadowInput.style.resize = 'none';
+
+  dialog2.appendChild(shadowLabel);
+  dialog2.appendChild(shadowInput);
+
+  dialog2.appendChild(uploadButton);
+
+  dialog2.appendChild(submitButton);
+
+  dialog2.appendChild(addButton);
+
+  dialog2.appendChild(cancelButton);
+
+  uploadButton.addEventListener('click', () => {
+    xmlbuild(
+      categoryInput.value,
+      colorInput.value,
+      typeInput.value,
+      valueInput.value,
+      shadowInput.value
+    );
+  });
+
+  submitButton.addEventListener('click', () => {
+    console.log('at submit add' + globalxml);
+
+    xmlbuild(
+      categoryInput.value,
+      colorInput.value,
+      typeInput.value,
+      valueInput.value,
+      shadowInput.value
+    );
+  });
+}
+
+export function xmlbuild(name, colour, blocktype, valuename, shadowtype) {
+  const newcategory = '<category name="' + name + '" colour="' + colour + '">';
+  const closecategory = '</category>';
+
+  const newblock = '<block type="' + blocktype + '">';
+  const closeblock = '</block>';
+
+  const newvalue = '<value name="' + valuename + '">';
+  const closevalue = '</value>';
+
+  const newshadow = '<shadow type="' + shadowtype + '">';
+  const closeshadow = '</shadow>';
+
+  const xmlstring =
+    newcategory +
+    newblock +
+    newvalue +
+    newshadow +
+    closeshadow +
+    closevalue +
+    closeblock +
+    closecategory;
+
+  console.log('xmlstring: ' + xmlstring);
+
+  globalxml += xmlstring;
+
+  console.log('globalxml: ' + globalxml);
+}
+
+export function inputxml(dialog2, options, resolve) {
+  globalxml = '<xml id="toolbox">';
+  const closexml = '</xml>';
+  const title = document.createElement('h2');
+  title.textContent = "Enter custom blocks' reference please.";
+  title.style.marginTop = '10';
+  title.style.textAlign = 'center';
+  title.style.color = 'white';
+
+  dialog2.appendChild(title);
+
+  const categoryLabel = document.createElement('label');
+  categoryLabel.innerText = 'Insert Block category:';
+  categoryLabel.style.color = 'white';
+  categoryLabel.setAttribute('for', 'categoryInput');
+
+  const categoryInput = document.createElement('textarea');
+  categoryInput.style.width = '95%';
+  categoryInput.style.height = '10px';
+  categoryInput.style.borderRadius = '10px';
+  categoryInput.style.backgroundColor = '#89C5E4';
+  categoryInput.style.padding = '10px';
+  categoryInput.style.resize = 'none';
+
+  dialog2.appendChild(categoryLabel);
+  dialog2.appendChild(categoryInput);
+
+  const colorLabel = document.createElement('label');
+  colorLabel.innerText = 'Insert Block color:';
+  colorLabel.style.color = 'white';
+  colorLabel.setAttribute('for', 'colorInput');
+
+  const colorInput = document.createElement('textarea');
+  colorInput.style.width = '95%';
+  colorInput.style.height = '10px';
+  colorInput.style.borderRadius = '10px';
+  colorInput.style.backgroundColor = '#89C5E4';
+  colorInput.style.padding = '10px';
+  colorInput.style.resize = 'none';
+
+  dialog2.appendChild(colorLabel);
+  dialog2.appendChild(colorInput);
+
+  const typeLabel = document.createElement('label');
+  typeLabel.innerText = 'Insert Block type:';
+  typeLabel.style.color = 'white';
+  typeLabel.setAttribute('for', 'typeInput');
+
+  const typeInput = document.createElement('textarea');
+  typeInput.style.width = '95%';
+  typeInput.style.height = '10px';
+  typeInput.style.borderRadius = '10px';
+  typeInput.style.backgroundColor = '#89C5E4';
+  typeInput.style.padding = '10px';
+  typeInput.style.resize = 'none';
+
+  dialog2.appendChild(typeLabel);
+  dialog2.appendChild(typeInput);
+
+  const valueLabel = document.createElement('label');
+  valueLabel.innerText = 'Insert Block value:';
+  valueLabel.style.color = 'white';
+  valueLabel.setAttribute('for', 'valueInput');
+
+  const valueInput = document.createElement('textarea');
+  valueInput.style.width = '95%';
+  valueInput.style.height = '10px';
+  valueInput.style.borderRadius = '10px';
+  valueInput.style.backgroundColor = '#89C5E4';
+  valueInput.style.padding = '10px';
+  valueInput.style.resize = 'none';
+
+  dialog2.appendChild(valueLabel);
+  dialog2.appendChild(valueInput);
+
+  const shadowLabel = document.createElement('label');
+  shadowLabel.innerText = 'Insert Block shadow:';
+  shadowLabel.style.color = 'white';
+  shadowLabel.setAttribute('for', 'shadowInput');
+
+  const shadowInput = document.createElement('textarea');
+  shadowInput.style.width = '95%';
+  shadowInput.style.height = '10px';
+  shadowInput.style.borderRadius = '10px';
+  shadowInput.style.backgroundColor = '#89C5E4';
+  shadowInput.style.padding = '10px';
+  shadowInput.style.resize = 'none';
+
+  dialog2.appendChild(shadowLabel);
+  dialog2.appendChild(shadowInput);
+
+  const uploadButton = document.createElement('button');
+  uploadButton.textContent = 'Upload JSON File';
+  uploadButton.style.backgroundColor = '#4CAF50';
+  uploadButton.style.borderRadius = '5px';
+  uploadButton.style.border = 'none';
+  uploadButton.style.color = 'white';
+  uploadButton.style.padding = '10px';
+  uploadButton.style.cursor = 'pointer';
+  uploadButton.style.marginTop = '10px';
+  uploadButton.style.marginRight = '5px';
+
+  const submitButton = document.createElement('button');
+  submitButton.textContent = 'Enter Blocks';
+  submitButton.style.backgroundColor = '#4CAF50';
+  submitButton.style.borderRadius = '5px';
+  submitButton.style.border = 'none';
+  submitButton.style.color = 'white';
+  submitButton.style.padding = '10px';
+  submitButton.style.cursor = 'pointer';
+  submitButton.style.marginTop = '10px';
+  submitButton.style.marginRight = '5px';
+
+  const cancelButton = document.createElement('button');
+  cancelButton.textContent = 'Cancel';
+  cancelButton.style.backgroundColor = '#DF4D4D';
+  cancelButton.style.borderRadius = '5px';
+  cancelButton.style.border = 'none';
+  cancelButton.style.color = 'white';
+  cancelButton.style.padding = '10px';
+  cancelButton.style.cursor = 'pointer';
+  //cancelButton.style.marginLeft = '5px';
+  cancelButton.style.marginTop = '10px';
+  cancelButton.style.marginRight = '5px';
+
+  const addButton = document.createElement('button');
+  addButton.textContent = 'Add Block';
+  addButton.style.backgroundColor = '#4CAF50';
+  addButton.style.borderRadius = '5px';
+  addButton.style.border = 'none';
+  addButton.style.color = 'white';
+  addButton.style.padding = '10px';
+  addButton.style.cursor = 'pointer';
+  addButton.style.marginTop = '10px';
+  addButton.style.marginRight = '5px';
+
+  dialog2.appendChild(uploadButton);
+
+  dialog2.appendChild(submitButton);
+
+  dialog2.appendChild(addButton);
+
+  dialog2.appendChild(cancelButton);
+
+  uploadButton.addEventListener('click', () => {
+    try {
+      xmlbuild(
+        categoryInput.value,
+        colorInput.value,
+        typeInput.value,
+        valueInput.value,
+        shadowInput.value
+      );
+      const inputElement = document.createElement('input');
+      inputElement.type = 'file';
+      inputElement.accept = '.json';
+
+      inputElement.addEventListener('change', () => {
+        const file = inputElement.files[0];
+        const reader = new FileReader();
+
+        reader.onload = event => {
+          try {
+            const fileContents = event.target.result as string;
+            globalxml += closexml;
+            Blockly.defineBlocksWithJsonArray(JSON.parse(fileContents));
+            for (const blocks of JSON.parse(fileContents)) {
+              pythonGenerator[blocks.type] = function (block) {
+                // Generate code recursively for connected blocks
+                const childrenCode = block.childBlocks_
+                  .map(childBlock => pythonGenerator.blockToCode(childBlock))
+                  .join('\n');
+
+                // Combine the code of the current block and its children
+                const code = `print('${block.type}')\n${childrenCode}`;
+
+                return code;
+              };
+            }
+
+            for (const blocks of JSON.parse(fileContents)) {
+              luaGenerator[blocks.type] = function (block) {
+                // Generate code recursively for connected blocks
+                const childrenCode = block.childBlocks_
+                  .map(childBlock => luaGenerator.blockToCode(childBlock))
+                  .join('\n');
+
+                // Combine the code of the current block and its children
+                const code = `print("${block.type}")\n${childrenCode}`;
+
+                return code;
+              };
+            }
+
+            for (const blocks of JSON.parse(fileContents)) {
+              javascriptGenerator[blocks.type] = function (block) {
+                // Generate code recursively for connected blocks
+                const childrenCode = block.childBlocks_
+                  .map(childBlock =>
+                    javascriptGenerator.blockToCode(childBlock)
+                  )
+                  .join('\n');
+
+                // Combine the code of the current block and its children
+                const code = `console.log('${block.type}');\n${childrenCode}`;
+
+                return code;
+              };
+            }
+
+            for (const blocks of JSON.parse(fileContents)) {
+              phpGenerator[blocks.type] = function (block) {
+                // Generate code recursively for connected blocks
+                const childrenCode = block.childBlocks_
+                  .map(childBlock => phpGenerator.blockToCode(childBlock))
+                  .join('\n');
+
+                // Combine the code of the current block and its children
+                const code = `echo '${block.type}';\n${childrenCode}`;
+
+                return code;
+              };
+            }
+
+            for (const blocks of JSON.parse(fileContents)) {
+              dartGenerator[blocks.type] = function (block) {
+                // Generate code recursively for connected blocks
+                const childrenCode = block.childBlocks_
+                  .map(childBlock => dartGenerator.blockToCode(childBlock))
+                  .join('\n');
+
+                // Combine the code of the current block and its children
+                const code = `print('${block.type}');\n${childrenCode}`;
+
+                return code;
+              };
+            }
+
+            options.manager.registerToolbox(
+              'default',
+              globalxml as ToolboxDefinition
+            );
+            resolve(globalxml as ToolboxDefinition);
+            dialog2.close();
+          } catch (e) {
+            console.error(e);
+            alert(
+              'Invalid format, please make sure the file is .json and try again.'
+            );
+            resolve(null);
+          }
+        };
+
+        reader.readAsText(file);
+      });
+
+      inputElement.click();
+    } catch (e) {
+      console.error(e);
+      alert('Invalid format, please try again.');
+    }
+  });
+
+  submitButton.addEventListener('click', () => {
+    try {
+      xmlbuild(
+        categoryInput.value,
+        colorInput.value,
+        typeInput.value,
+        valueInput.value,
+        shadowInput.value
+      );
+
+      //globalxml += closexml
+
+      console.log('submit globalxml: ' + globalxml);
+
+      resolve(globalxml as ToolboxDefinition);
+      dialog2.close();
+
+      createcustomblocksToolbox(options, resolve, globalxml);
+
+      console.log('submit globalxml22: ' + globalxml);
+      //document.body.appendChild(dialog);
+      //dialog.showModal();
+    } catch (e) {
+      console.error(e);
+      alert('Invalid format, please try again.');
+    }
+  });
+
+  addButton.addEventListener('click', () => {
+    dialog2.removeChild(addButton);
+    dialog2.removeChild(uploadButton);
+    dialog2.removeChild(submitButton);
+    dialog2.appendChild(cancelButton);
+    addreference(dialog2, addButton, uploadButton, submitButton, cancelButton);
+  });
+
+  cancelButton.addEventListener('click', () => {
+    dialog2.close();
+    resolve('');
+  });
+}
+
 function addcustomBlockButton(
   dialog2,
   doneButton,
@@ -444,7 +908,7 @@ function addcustomBlockButton(
   dialog2.appendChild(colorInput);
 
   const tooltipLabel = document.createElement('label');
-  tooltipLabel.innerText = "Insert Block's tooltip:";
+  tooltipLabel.innerText = "Insert Block's tooltip (if applicable):";
   tooltipLabel.style.color = 'white';
   tooltipLabel.setAttribute('for', 'tooltipInput');
 
@@ -460,7 +924,7 @@ function addcustomBlockButton(
   dialog2.appendChild(tooltipInput);
 
   const outputLabel = document.createElement('label');
-  outputLabel.innerText = "Insert Block's output:";
+  outputLabel.innerText = "Insert Block's output (if applicable):";
   outputLabel.style.color = 'white';
   outputLabel.setAttribute('for', 'outputInput');
 
@@ -480,19 +944,32 @@ function addcustomBlockButton(
   inputsInlineLabel.style.color = 'white';
   inputsInlineLabel.setAttribute('for', 'inputsInlineInput');
 
-  const inputsInlineInput = document.createElement('textarea');
-  inputsInlineInput.style.width = '95%';
-  inputsInlineInput.style.height = '10px';
+  const inputsInlineInput = document.createElement('select');
+  inputsInlineInput.style.width = '97%';
   inputsInlineInput.style.borderRadius = '10px';
   inputsInlineInput.style.backgroundColor = '#89C5E4';
   inputsInlineInput.style.padding = '10px';
-  inputsInlineInput.style.resize = 'none';
+  //inputsInlineInput.style.color = 'white'
+
+  // Create options for true and false
+  const optionTrue = document.createElement('option');
+  optionTrue.value = 'true';
+  optionTrue.text = 'true';
+  optionTrue.style.color = 'white';
+  const optionFalse = document.createElement('option');
+  optionFalse.value = 'false';
+  optionFalse.text = 'false';
+
+  // Append the options to the select element
+  inputsInlineInput.appendChild(optionTrue);
+  inputsInlineInput.appendChild(optionFalse);
 
   dialog2.appendChild(inputsInlineLabel);
   dialog2.appendChild(inputsInlineInput);
 
   const previousStatementLabel = document.createElement('label');
-  previousStatementLabel.innerText = "Insert Block's previous statement:";
+  previousStatementLabel.innerText =
+    "Insert Block's previous statement (if applicable):";
   previousStatementLabel.style.color = 'white';
   previousStatementLabel.setAttribute('for', 'previousStatementInput');
 
@@ -508,7 +985,8 @@ function addcustomBlockButton(
   dialog2.appendChild(previousStatementInput);
 
   const nextStatementLabel = document.createElement('label');
-  nextStatementLabel.innerText = "Insert Block's next statement:";
+  nextStatementLabel.innerText =
+    "Insert Block's next statement (if applicable):";
   nextStatementLabel.style.color = 'white';
   nextStatementLabel.setAttribute('for', 'nextStatementInput');
 
@@ -528,10 +1006,6 @@ function addcustomBlockButton(
 
   doneButton.addEventListener('click', () => {
     try {
-      /**insertedToolbox = {
-        kind: insertedToolbox.kind,
-        contents: insertedToolbox.contents.concat(x.contents[0].contents)
-      };**/
       addcustomToolbox(
         typeInput.value,
         message0Input.value,
@@ -639,12 +1113,21 @@ function addcustomToolbox(
   };
 }
 
-export function createcustomblocksToolbox(
-  dialog2: any,
-  options: any,
-  resolve: any,
-  xmlName
-) {
+export function createcustomblocksToolbox(options: any, resolve: any, xmlName) {
+  const dialog2 = document.createElement('dialog');
+  dialog2.style.backgroundColor = '#597ED5';
+  dialog2.style.borderRadius = '10px';
+  dialog2.style.position = 'fixed';
+  dialog2.style.top = '10%'; // Adjust the top position as needed
+  dialog2.style.left = '50%';
+  dialog2.style.transform = 'translateX(-50%)';
+  dialog2.style.padding = '20px';
+  dialog2.style.zIndex = '9999';
+
+  // Set the width and height to fit most of the screen
+  dialog2.style.width = '80%';
+  dialog2.style.height = '80%';
+
   const title = document.createElement('h2');
   title.textContent = 'Enter Custom Blocks data please.';
   title.style.marginTop = '0';
@@ -721,7 +1204,7 @@ export function createcustomblocksToolbox(
   dialog2.appendChild(colorInput);
 
   const tooltipLabel = document.createElement('label');
-  tooltipLabel.innerText = "Insert Block's tooltip:";
+  tooltipLabel.innerText = "Insert Block's tooltip (if applicable):";
   tooltipLabel.style.color = 'white';
   tooltipLabel.setAttribute('for', 'tooltipInput');
 
@@ -737,7 +1220,7 @@ export function createcustomblocksToolbox(
   dialog2.appendChild(tooltipInput);
 
   const outputLabel = document.createElement('label');
-  outputLabel.innerText = "Insert Block's output:";
+  outputLabel.innerText = "Insert Block's output (if applicable):";
   outputLabel.style.color = 'white';
   outputLabel.setAttribute('for', 'outputInput');
 
@@ -752,24 +1235,38 @@ export function createcustomblocksToolbox(
   dialog2.appendChild(outputLabel);
   dialog2.appendChild(outputInput);
 
+  //const inputsInlineLabel = document.createElement('label');
   const inputsInlineLabel = document.createElement('label');
   inputsInlineLabel.innerText = "Insert Block's inputsInline as true or false:";
   inputsInlineLabel.style.color = 'white';
   inputsInlineLabel.setAttribute('for', 'inputsInlineInput');
 
-  const inputsInlineInput = document.createElement('textarea');
-  inputsInlineInput.style.width = '95%';
-  inputsInlineInput.style.height = '10px';
+  const inputsInlineInput = document.createElement('select');
+  inputsInlineInput.style.width = '97%';
   inputsInlineInput.style.borderRadius = '10px';
   inputsInlineInput.style.backgroundColor = '#89C5E4';
   inputsInlineInput.style.padding = '10px';
-  inputsInlineInput.style.resize = 'none';
+
+  // Create options for true and false
+  const optionTrue = document.createElement('option');
+  optionTrue.value = 'true';
+  optionTrue.text = 'true';
+  optionTrue.style.color = 'white';
+  const optionFalse = document.createElement('option');
+  optionFalse.value = 'false';
+  optionFalse.text = 'false';
+  optionFalse.style.color = 'white';
+
+  // Append the options to the select element
+  inputsInlineInput.appendChild(optionTrue);
+  inputsInlineInput.appendChild(optionFalse);
 
   dialog2.appendChild(inputsInlineLabel);
   dialog2.appendChild(inputsInlineInput);
 
   const previousStatementLabel = document.createElement('label');
-  previousStatementLabel.innerText = "Insert Block's previous statement:";
+  previousStatementLabel.innerText =
+    "Insert Block's previous statement (if applicable):";
   previousStatementLabel.style.color = 'white';
   previousStatementLabel.setAttribute('for', 'previousStatementInput');
 
@@ -785,7 +1282,8 @@ export function createcustomblocksToolbox(
   dialog2.appendChild(previousStatementInput);
 
   const nextStatementLabel = document.createElement('label');
-  nextStatementLabel.innerText = "Insert Block's next statement:";
+  nextStatementLabel.innerText =
+    "Insert Block's next statement (if applicable):";
   nextStatementLabel.style.color = 'white';
   nextStatementLabel.setAttribute('for', 'nextStatementInput');
 
@@ -828,27 +1326,7 @@ export function createcustomblocksToolbox(
 
   doneButton.addEventListener('click', () => {
     try {
-      const xmlString = xmlName.value as string;
-
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = xmlString;
-
-      const meta = document.createElement('meta');
-      meta.setAttribute('charset', 'utf-8');
-
-      const script = document.createElement('script');
-      script.setAttribute('src', 'https://unpkg.com/blockly/blockly.min.js');
-
-      const div = document.createElement('div');
-      div.id = 'blocklyDiv';
-      div.style.height = '480px';
-      div.style.width = '800px';
-
-      const toolbox = tempDiv.querySelector('#toolbox');
-
-      document.head.appendChild(meta);
-      document.head.appendChild(script);
-      document.body.appendChild(div);
+      const xmlString = xmlName;
 
       addcustomToolbox(
         typeInput.value,
@@ -862,13 +1340,15 @@ export function createcustomblocksToolbox(
       );
       // Append the elements to the document's head or body as needed
 
-      const toolboxXmlString = new XMLSerializer().serializeToString(toolbox);
+      //const toolboxXmlString = new XMLSerializer().serializeToString(toolbox);
+      globalxml += '</xml>';
 
+      console.log('customtoolobx globalxml: ' + globalxml);
       options.manager.registerToolbox(
         'default',
-        toolboxXmlString as ToolboxDefinition
+        globalxml as ToolboxDefinition
       );
-      resolve(toolboxXmlString as ToolboxDefinition);
+      resolve(xmlString as ToolboxDefinition);
       dialog2.close();
     } catch (e) {
       console.error(e);
@@ -914,6 +1394,9 @@ export function createcustomblocksToolbox(
     dialog2.close();
     resolve('');
   });
+
+  document.body.appendChild(dialog2);
+  dialog2.showModal();
 }
 
 export function customexecute(options: any): ToolboxDefinition {
@@ -950,6 +1433,7 @@ export function customexecute(options: any): ToolboxDefinition {
   nameInput.style.borderRadius = '10px';
   nameInput.style.padding = '5px';
   nameInput.style.margin = 'auto';
+  nameInput.style.backgroundColor = '#89C5E4';
 
   const colorLabel = document.createElement('label');
   colorLabel.innerText = 'Choose the desired color of the toolbox:';
@@ -965,42 +1449,31 @@ export function customexecute(options: any): ToolboxDefinition {
   colorInput.style.padding = '5px';
   colorInput.style.margin = 'auto';
 
-  let customresult = '';
+  const customLabel = document.createElement('label');
+  customLabel.innerText = "Choose either 'Variable' or 'Procedure':";
+  customLabel.style.color = 'white';
+  customLabel.setAttribute('for', 'customInput');
 
-  const choiceLabel = document.createElement('label');
-  choiceLabel.innerText = 'Choose either "Variable" or "Procedure":';
-  choiceLabel.style.color = 'white';
+  const customInput = document.createElement('select');
+  customInput.style.width = '97%';
+  customInput.style.borderRadius = '10px';
+  customInput.style.backgroundColor = '#89C5E4';
+  customInput.style.padding = '10px';
 
-  const variableButton = document.createElement('button');
-  variableButton.textContent = 'Variable';
-  variableButton.style.marginRight = '10px';
-  variableButton.style.width = '100%';
-  variableButton.addEventListener(
-    'click',
-    handleChoiceClick.bind(null, 'variable')
-  );
+  // Create options for true and false
+  const optionVariable = document.createElement('option');
+  optionVariable.value = 'VARIABLE';
+  optionVariable.text = 'Variable';
+  optionVariable.style.color = 'white';
 
-  const procedureButton = document.createElement('button');
-  procedureButton.textContent = 'Procedure';
-  procedureButton.style.width = '100%';
-  procedureButton.addEventListener(
-    'click',
-    handleChoiceClick.bind(null, 'procedure')
-  );
+  const optionProcedure = document.createElement('option');
+  optionProcedure.value = 'PROCEDURE';
+  optionProcedure.text = 'Procedure';
+  optionProcedure.style.color = 'white';
 
-  function handleChoiceClick(choice: string): void {
-    const selectedButton =
-      choice === 'variable' ? variableButton : procedureButton;
-
-    selectedButton.style.transform = 'translateX(100%)';
-    selectedButton.style.transition = 'transform 0.5s';
-
-    if (choice === 'variable') {
-      customresult = 'VARIABLE';
-    } else {
-      customresult = 'PROCEDURE';
-    }
-  }
+  // Append the options to the select element
+  customInput.appendChild(optionVariable);
+  customInput.appendChild(optionProcedure);
 
   dialog2.appendChild(title2);
 
@@ -1009,10 +1482,11 @@ export function customexecute(options: any): ToolboxDefinition {
 
   dialog2.appendChild(colorLabel);
   dialog2.appendChild(colorInput);
-
-  dialog2.appendChild(choiceLabel);
-  dialog2.appendChild(variableButton);
-  dialog2.appendChild(procedureButton);
+  dialog2.appendChild(customLabel);
+  dialog2.appendChild(customInput);
+  //dialog2.appendChild(choiceLabel);
+  //dialog2.appendChild(variableButton);
+  //dialog2.appendChild(procedureButton);
 
   const submitButton = document.createElement('button');
   submitButton.textContent = 'Submit';
@@ -1034,7 +1508,7 @@ export function customexecute(options: any): ToolboxDefinition {
           {
             kind: 'CATEGORY',
             colour: colorInput.value,
-            custom: customresult,
+            custom: customInput.value,
             name: nameInput.value
           }
         ]
