@@ -374,7 +374,7 @@ function addreference(
   cancelButton
 ) {
   const title = document.createElement('h2');
-  title.textContent = 'New block';
+  title.textContent = 'New Category';
   title.style.marginTop = '10';
   title.style.textAlign = 'center';
   title.style.color = 'white';
@@ -382,7 +382,7 @@ function addreference(
   dialog2.appendChild(title);
 
   const categoryLabel = document.createElement('label');
-  categoryLabel.innerText = 'Insert Block category:';
+  categoryLabel.innerText = 'Insert Block name:';
   categoryLabel.style.color = 'white';
   categoryLabel.setAttribute('for', 'categoryInput');
 
@@ -534,7 +534,7 @@ export function inputxml(dialog2, options, resolve) {
   dialog2.appendChild(title);
 
   const categoryLabel = document.createElement('label');
-  categoryLabel.innerText = 'Insert Block category:';
+  categoryLabel.innerText = 'Insert Block name:';
   categoryLabel.style.color = 'white';
   categoryLabel.setAttribute('for', 'categoryInput');
 
@@ -648,7 +648,7 @@ export function inputxml(dialog2, options, resolve) {
   cancelButton.style.marginRight = '5px';
 
   const addButton = document.createElement('button');
-  addButton.textContent = 'Add Block';
+  addButton.textContent = 'Add Category';
   addButton.style.backgroundColor = '#4CAF50';
   addButton.style.borderRadius = '5px';
   addButton.style.border = 'none';
@@ -1755,7 +1755,7 @@ export function createToolbox(dialog2: any, options: any, resolve: any) {
   customButton.style.padding = '10px';
   customButton.style.cursor = 'pointer';
   customButton.style.marginTop = '10px';
-  customButton.style.marginRight = '8px';
+  customButton.style.marginRight = '10px';
   //customButton.style.marginLeft = 'auto';
 
   dialog2.appendChild(customButton);
@@ -1769,7 +1769,7 @@ export function createToolbox(dialog2: any, options: any, resolve: any) {
   addButton.style.padding = '10px';
   addButton.style.cursor = 'pointer';
   addButton.style.marginTop = '10px';
-  addButton.style.marginRight = '5px';
+  addButton.style.marginRight = '10px';
 
   dialog2.appendChild(addButton);
 
@@ -1831,7 +1831,7 @@ export function createToolbox(dialog2: any, options: any, resolve: any) {
   localCancelButton.style.color = 'white';
   localCancelButton.style.padding = '10px';
   localCancelButton.style.cursor = 'pointer';
-  localCancelButton.style.marginLeft = '5px';
+  localCancelButton.style.marginRight = '10px';
   localCancelButton.style.marginTop = '10px';
 
   dialog2.appendChild(localCancelButton);
