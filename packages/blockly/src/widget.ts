@@ -206,18 +206,55 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
                       fileType === 'text/xml' ||
                       fileType === 'application/xml'
                     ) {
-                      // Handle XML file
                       const xmlContent = event.target.result as string;
-                      const trimmedXmlContent = xmlContent.replace(
-                        /\n\s*/g,
-                        ''
+
+                      const parser = new DOMParser();
+                      const xmlDoc = parser.parseFromString(
+                        xmlContent,
+                        'application/xml'
                       );
-                      console.log('XML content:', trimmedXmlContent);
+
+                      const rootElement = xmlDoc.documentElement;
+
+                      const blockElements =
+                        rootElement.getElementsByTagName('block');
+
+                      let hasUnwrappedBlocks = false;
+                      for (let i = 0; i < blockElements.length; i++) {
+                        const blockElement = blockElements[i];
+                        if (
+                          !blockElement.parentElement ||
+                          blockElement.parentElement.tagName !== 'category'
+                        ) {
+                          hasUnwrappedBlocks = true;
+                          break;
+                        }
+                      }
+
+                      if (hasUnwrappedBlocks) {
+                        const categoryElement =
+                          xmlDoc.createElement('category');
+                        categoryElement.setAttribute('name', 'FlyoutToolbox');
+                        categoryElement.setAttribute('colour', 'black');
+
+                        while (blockElements.length) {
+                          categoryElement.appendChild(blockElements[0]);
+                        }
+
+                        rootElement.appendChild(categoryElement);
+                      }
+
+                      const modifiedXmlContent =
+                        new XMLSerializer().serializeToString(xmlDoc);
+
+                      console.log(modifiedXmlContent);
+
+                      //console.log('XML content:', trimmedXmlContent);
                       options.manager.registerToolbox(
                         'default',
-                        trimmedXmlContent as ToolboxDefinition
+                        modifiedXmlContent as ToolboxDefinition
                       );
-                      resolve(trimmedXmlContent as ToolboxDefinition);
+                      resolve(modifiedXmlContent as ToolboxDefinition);
                     }
 
                     dialog.close();
