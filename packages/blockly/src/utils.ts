@@ -430,7 +430,7 @@ function addreference(
   dialog2.appendChild(typeInput);
 
   const valueLabel = document.createElement('label');
-  valueLabel.innerText = 'Insert Block value:';
+  valueLabel.innerText = 'Insert Block value (if applicable):';
   valueLabel.style.color = 'white';
   valueLabel.setAttribute('for', 'valueInput');
 
@@ -446,7 +446,7 @@ function addreference(
   dialog2.appendChild(valueInput);
 
   const shadowLabel = document.createElement('label');
-  shadowLabel.innerText = 'Insert Block shadow:';
+  shadowLabel.innerText = 'Insert Block shadow (if applicable):';
   shadowLabel.style.color = 'white';
   shadowLabel.setAttribute('for', 'shadowInput');
 
@@ -582,7 +582,7 @@ export function inputxml(dialog2, options, resolve) {
   dialog2.appendChild(typeInput);
 
   const valueLabel = document.createElement('label');
-  valueLabel.innerText = 'Insert Block value:';
+  valueLabel.innerText = 'Insert Block value (if applicable):';
   valueLabel.style.color = 'white';
   valueLabel.setAttribute('for', 'valueInput');
 
@@ -598,7 +598,7 @@ export function inputxml(dialog2, options, resolve) {
   dialog2.appendChild(valueInput);
 
   const shadowLabel = document.createElement('label');
-  shadowLabel.innerText = 'Insert Block shadow:';
+  shadowLabel.innerText = 'Insert Block shadow (if applicable):';
   shadowLabel.style.color = 'white';
   shadowLabel.setAttribute('for', 'shadowInput');
 
@@ -1125,8 +1125,8 @@ export function createcustomblocksToolbox(options: any, resolve: any, xmlName) {
   dialog2.style.zIndex = '9999';
 
   // Set the width and height to fit most of the screen
-  dialog2.style.width = '80%';
-  dialog2.style.height = '80%';
+  dialog2.style.width = '70%';
+  dialog2.style.height = '70%';
 
   const title = document.createElement('h2');
   title.textContent = 'Enter Custom Blocks data please.';
@@ -1412,8 +1412,8 @@ export function customexecute(options: any): ToolboxDefinition {
   dialog2.style.zIndex = '9999';
 
   // Set the width and height to fit most of the screen
-  dialog2.style.width = '50%';
-  dialog2.style.height = '50%';
+  dialog2.style.width = '40%';
+  dialog2.style.height = '47%';
 
   const title2 = document.createElement('h2');
   title2.textContent = 'Please choose a custom block.';
@@ -1633,8 +1633,8 @@ function addBlockButton(
   dialog2.appendChild(contentsxmlLabel);
   dialog2.appendChild(contentsxml);
   dialog2.appendChild(doneButton);
-  dialog2.appendChild(customButton);
   dialog2.appendChild(addbutton);
+  dialog2.appendChild(customButton);
   dialog2.appendChild(localCancelButton);
 
   doneButton.addEventListener('click', () => {
@@ -1716,7 +1716,7 @@ export function createToolbox(dialog2: any, options: any, resolve: any) {
   contentsInput.style.resize = 'none';
 
   const contentsxmlLabel = document.createElement('label');
-  contentsxmlLabel.innerText = 'Insert blockxml(optional):';
+  contentsxmlLabel.innerText = 'Insert blockxml (optional):';
   contentsxmlLabel.style.color = 'white';
   contentsxmlLabel.setAttribute('for', 'contentsxml');
 
@@ -1746,6 +1746,19 @@ export function createToolbox(dialog2: any, options: any, resolve: any) {
 
   dialog2.appendChild(doneButton);
 
+  const addButton = document.createElement('button');
+  addButton.textContent = 'Add Block';
+  addButton.style.backgroundColor = '#4CAF50';
+  addButton.style.borderRadius = '5px';
+  addButton.style.border = 'none';
+  addButton.style.color = 'white';
+  addButton.style.padding = '10px';
+  addButton.style.cursor = 'pointer';
+  addButton.style.marginTop = '10px';
+  addButton.style.marginRight = '10px';
+
+  dialog2.appendChild(addButton);
+
   const customButton = document.createElement('button');
   customButton.textContent = 'Custom Block';
   customButton.style.backgroundColor = '#4CAF50';
@@ -1759,19 +1772,6 @@ export function createToolbox(dialog2: any, options: any, resolve: any) {
   //customButton.style.marginLeft = 'auto';
 
   dialog2.appendChild(customButton);
-
-  const addButton = document.createElement('button');
-  addButton.textContent = 'Add Block';
-  addButton.style.backgroundColor = '#4CAF50';
-  addButton.style.borderRadius = '5px';
-  addButton.style.border = 'none';
-  addButton.style.color = 'white';
-  addButton.style.padding = '10px';
-  addButton.style.cursor = 'pointer';
-  addButton.style.marginTop = '10px';
-  addButton.style.marginRight = '10px';
-
-  dialog2.appendChild(addButton);
 
   doneButton.addEventListener('click', () => {
     try {
